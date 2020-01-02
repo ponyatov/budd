@@ -40,3 +40,19 @@ doc: doc/LittleSmalltalk.pdf
 doc/LittleSmalltalk.pdf:
 	$(WGET)	-O $@ http://sdmeta.gforge.inria.fr/FreeBooks/LittleSmalltalk/ALittleSmalltalk.pdf
 
+################################################################# SHADOW git	
+
+.PHONY: merge release
+
+MERGE  = Makefile README.md .gitignore doc
+MERGE += $(TEX) $(SRC) $(IMG)
+
+merge:
+	git checkout master
+	git checkout shadow -- $(MERGE)
+
+release: pdf
+	git tag $(NOW)-$(REL)
+	git push -v && git push -v --tags
+	git checkout shadow
+
