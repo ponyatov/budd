@@ -1,0 +1,225 @@
+\input{header}
+
+\title{A Little Smalltalk}
+\author{Timothy Budd}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\secly{Preface}
+\subsecly{The Little Smalltalk System: Some History}
+\subsecly{About A Little Smalltalk}
+\subsecly{Acknowledgments}
+\subsecly{Obtaining the Little Smalltalk System}
+
+\secrel{The Language}\secdown
+
+\secrel{Basics}\secdown
+
+This chapter introduces the basic concepts of the Smalltalk language;
+namely object, method, class, inheritance and overriding.
+
+\secrel{Objects, Classes, and Inheritance}
+\secrel{History, Background Reading}
+\secup
+
+\secrel{Syntax}\secdown
+
+This chapter introduces the syntax for literal objects (such as numbers)
+and the syntax for messages. It explains how to use the Little Smalltalk
+system to evaluate expressions typed in directly at the keyboard and
+how to use a few simple messages to discover information about different types of objects.
+
+\secrel{Literal Constants}
+\secrel{Identifiers}
+\secrel{Messages}
+\secrel{Getting Started}
+\secrel{Finding Out About Objects}
+\secrel{Blocks}
+\secrel{Comments and Continuations}
+
+\secup
+
+\secrel{Basic Classes}\secdown
+
+The basic classes included in the Little Smalltalk standard library are
+explained in this chapter.
+
+\secrel{Basic Objects}
+\secrel{Collections}
+\secrel{Control Structures}
+\secrel{Class Management}
+\secrel{Abstract Superclasses}
+
+\secup
+
+\secrel{Class Definition}\secdown
+
+This chapter introduces the syntax used for defining classes. An example class definition is presented.
+
+\secrel{An Illustrative Example}
+\secrel{Processing a Class Definition}
+
+\secup
+
+\secrel{A Simple Application}\secdown
+
+This chapter illustrates the development of a simple application in
+Smalltalk and describes how environments can be saved and restored.
+
+\secrel{Saving Environments}
+
+\secup
+
+\secrel{Primitives, Cascades, and Coercions}\secdown
+
+This chapter introduces the syntax for cascaded expressions and describes the notion of primitive expressions. It illustrates the use of
+primitives by showing how primitives are used to produce the correct
+results for mixed mode arithmetic operations.
+
+\secrel{Cascades}
+\secrel{Primitives}
+\secrel{Numbers}
+
+\secup
+
+\secrel{A Simulation}\secdown
+
+This chapter presents a simple simulation of an ice cream store, illustrating the ease with which simulations can be described in Smalltalk.
+
+\secrel{The Ice Cream Store Simulation}
+\secrel{Further Reading}
+
+\secup
+
+\secrel{Generators}\secdown
+
+This chapter introduces the concept of generators and shows how
+generators can be used in the solution of problems requiring goaldirected evaluation.
+
+\secrel{Filters}
+\secrel{Goal-Directed Evaluation}
+\secrel{Operatkms on Generators}
+\secrel{Further Reading}
+
+\secup
+
+\secrel{Graphics}\secdown
+
+Although graphics are not fundamental to Little Smalltalk in the same
+way that they are an intrinsic part of the Smalltalk-80 system, it is still
+possible to describe some graphics functions using the language. This
+chapter details three types of approaches to graphics.
+
+\secrel{Character Graphics}
+\secrel{Line Graphics}
+\secrel{Bit-Mapped Graphics}
+
+\secup
+
+\secrel{Processes}\secdown
+
+This chapter introduces the concepts of processes and semaphores. It
+illustrates these concepts using the dining philosophers problem.
+
+\secrel{Semaphores}
+\secrel{Monitors}
+\secrel{The Dining Philosophers Problem }
+\secrel{Further Reading}
+
+\secup
+
+\secup
+
+\secrel{The Implementation}\secdown
+
+\secrel{Implementation Overview}\secdown
+
+This chapter describes the features that make an interpreter for the
+Smalltalk language different from, say, a Pascal compiler. Provides a
+high-level description of the major components in the Little Smalltalk
+system.
+
+\secrel{Identifier Typelessness}
+\secrel{Unscoped Lifetimes}
+\secrel{An Interactive System}
+\secrel{A Multi-Processing Language}
+\secrel{System Overview}
+
+\secup
+
+\secrel{1he Representation ofObjects}\secdown
+
+The internal representation of objects in the Little Smalltalk system is
+described in this chapter, which also overviews the memory management algorithms. 
+The chapter ends with a discussion of several optimizations used to 
+improve the speed of the Little Smalltalk system.
+
+\secrel{Special Objects}
+\secrel{Memory Management}
+\secrel{Optimizations}
+
+\secup
+
+\secrel{Bytecodes}\secdown
+
+The techniques used to represent methods internally in the Little Smalltalk system are described in this chapter.
+
+\secrel{The Representation of Methods}
+\secrel{Optimizations}
+\secrel{Dynamic Optimizations }
+
+\secup
+
+\secrel{The Process Manager}\secdown
+
+This chapter presents a more detailed view of the central component
+of the Little Smalltalk system, the process manager. It then goes on to
+describe the driver, the process that reads commands from the user
+terminal and schedules them for execution. The chapter ends by describing the class parser and the internal representation of classes.
+
+\secrel{The Driver}
+\secrel{The Class Parser}
+
+\secup
+
+\secrel{The Interpreter}\secdown
+
+This chapter describes the actions of the interpreter and the courier
+in executing bytecodes and passing messages. It ends by describing
+the primitive handler and the manipulation of special objects.
+
+\secrel{Push Opcodes}
+\secrel{Pop Opcodes}
+\secrel{Message-Sending Opcodes}
+\secrel{Block Creation}
+\secrel{Special Instructions}
+\secrel{The Courier}
+\secrel{The Primitive Handler}
+\secrel{Blocks}
+
+\secup
+
+\secup
+
+\secly{References}
+
+An annotated bibliography of references related to the Little Smalltalk system.
+
+\secly{Projects}
+
+\secly{Appendices}
+
+\subsecly{Running Little Smalltalk}
+
+\subsecly{Syntax Charts}
+
+\subsecly{Class Descriptions}
+
+\subsecly{Primitives}
+
+\subsecly{Differences Between Little Smalltalk\\and the Smalltalk-80 Programming System}
+
+\end{document}

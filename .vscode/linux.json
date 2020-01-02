@@ -1,0 +1,13 @@
+{
+    "python.pythonPath": "bin/python3",
+    "multiCommand.commands": [
+        {
+            "command": "multiCommand.build",
+            "sequence": [
+                "workbench.action.files.saveAll",
+                // "workbench.action.terminal.focus",
+                {"command": "workbench.action.terminal.sendSequence","args": {"text": "\u000Dpdflatex -halt-on-error budd\u000D"}}
+            ],
+        },
+    ],
+}
