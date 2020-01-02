@@ -6,6 +6,10 @@ NOW = $(shell date +%d%m%y)
 REL = $(shell git rev-parse --short=4 HEAD)
 
 TEX  = $(MODULE).tex header.tex
+TEX += language/language.tex
+TEX += implement/implement.tex
+TEX += refs.tex
+TEX += projects/projects.tex
 
 LATEX = pdflatex -halt-on-error
 
