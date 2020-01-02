@@ -1,0 +1,80 @@
+\secrel{Messages}
+
+As noted in Chapter I, all actions in Smalltalk are produced by sending
+messages to objects. This section begins by describing the syntax used to
+produce messages.
+
+Any message can be divided into three parts; a receiver, a message
+selector, and zero or more arguments. The receiver and argument portions
+of a message can be specified by other message expressions, or they may
+be specified by a single token, such as an identifier or a literal.
+
+The first type of message selector requires no arguments and is called
+a unary message. A unary message selector consists of an identifier, the
+first letter of which must be lowercase. For example:
+\begin{lstlisting}
+7 sign
+\end{lstlisting}
+illustrates the message sign being passed to the number 7. Unary messages,
+like all messages, elicit a response, which is simply another object. The
+response to sign is an integer, either -1,0, or 1, depending upon the sign
+of the object the message was sent to (the receiver). Unary messages parse
+left to right, so, for example:
+\begin{lstlisting}
+7 factorial sqrt
+\end{lstlisting}
+returns $\sqrt{7!}$, or approximately 70.993.    
+
+The second form of message, called a binary message, takes one argument. 
+A binary message is formed from one or two adjacent nonalphabetic characters\note{Some 
+characters, such as braces, parenthesis or periods, cannot be used to form
+binary messages. See the description in Appendix 2 for a more complete description of the
+restrictions.}.
+Binary messages tend to be used for arithmetic
+operations, although this is not enforced by the system and there are
+notable exceptions. An example of a binary message is arithmetic addition:
+\begin{lstlisting}
+7 + 4
+\end{lstlisting}
+At first the fact that this is interpreted as "send the message + with
+argument 4 to-the object 7"may seem strange; however, soon the uniform
+treatment of objects and message passing in Smalltalk makes this seem
+natural.
+
+Binary messages, like unary messages, parse left to right. Thus
+\begin{lstlisting}
+7 + 4 * 3
+\end{lstlisting}
+results in 33, not 19. \emph{Unary messages have a higher precedence than binary
+messages}, thus
+\begin{lstlisting}
+7 + 17 sqrt
+\end{lstlisting}
+evaluates as $7 + (\sqrt{17})$, not $\sqrt{(7 + 17)}$.
+
+The most general type of message is a keyword message. The selector
+for a keyword message consists of one or more keywords. Each keyword
+is followed by an argument. A keyword is simply an identifier (again, the
+first character must be lower case) followed by a colon. The argument can
+be any expression, although if the expression is formed using a keyword
+message, it must be placed in parentheses to avoid ambiguity. Example
+keyword expressions are:
+\begin{lstlisting}
+7 max: 14.
+7 between: 2 and: 24
+\end{lstlisting}
+
+When we wish to express the name of the message being requested by
+a keyword message, we catenate the keyword tokens. Thus we say the
+message selector being expressed in the second example above is between:and:. There can be any number of keywords in a keyword message,
+although in practice few messages have more than three.
+
+Keyword messages have lower precedence than either binary or unary
+messages. Thus
+\begin{lstlisting}
+7 between: 2 sqrt and: 4 + 2
+\end{lstlisting}
+\begin{lstlisting}
+7 between: (2 sqrt) and: (4 + 2)
+\end{lstlisting}
+            

@@ -1,0 +1,39 @@
+\secrel{Blocks}
+
+An interesting feature of Smalltalk is the ability to encapsulate a sequence
+of actions and then to perform those actions at a later time, perhaps even
+in a different context. This feature is called a block (an instance of class
+Block) and is formed by surrounding a sequence of Smalltalk statements
+with square braces, as in:
+\begin{lstlisting}
+[ i <= i+1. i print ]
+\end{lstlisting}
+
+Within a block (and, as we will see in the next chapter, in general
+within a method) a period is used as a statement separator. Since a block
+is an object, it can be assigned to an identifier or passed as an argument
+with a message or used in any other manner in which objects may be used.
+In response to the unary message value, a block will execute in the context
+in which it was defined, regardless of whether this is the current context
+or not. That is, when the block given above is evaluated, the identifier i
+will refer to the binding of the identifier i that was known at the time the
+block was defined. Even if the block is passed as an argument into a class
+in which there is a different instance variable i and then evaluated, the i
+in the block will refer to the i in the context in which the block was defined.
+Thus a block when used as a parameter is similar to the Algol-60 call-byname notion of a thunk.
+
+The value returned by a block is the value of the last expression inside
+that block. Frequently a block will contain a single expression, and the
+value resulting from that block will be the value of the expression.
+
+One way to think about blocks is as a type of in-line procedure declaration. Like procedures, a block can also take a number of arguments.
+Parameters are denoted by colon-variables at the beginning of the block,
+followed by a vertical bar and then the statements composing the block.
+For example,
+\begin{lstlisting}
+[:x :y | (x + y) print]
+\end{lstlisting}
+is known as a two-parameter block (sometimes two-argument block). The
+message value: is used to evaluate a block with parameters the number of
+value: keywords given matches the number of arguments in the block. So,
+for the example given above, the evaluating message would be value:value:.

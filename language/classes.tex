@@ -1,0 +1,59 @@
+\secrel{Basic Classes}\secdown
+
+Основные классы, включенные в стандартную библиотеку Little Smalltalk, описаны в этой главе.
+
+\bigskip
+
+The classes included in the Little Smalltalk system can be roughly divided
+into four overlapping groups. These groups are Basic Objects (Object,
+UndefinedObject, Symbol, Boolean, True, False, Magnitude, Number,
+Char, Integer, Float, Radian, Point), Collections (Collection, Bag, Set,
+SequenceableCollection, KeyedCollection, Dictionary, Interval, List,
+ArrayedCollection, Array, String, File, Random, ByteArray), Control
+Structures (Boolean, True, False, Interval, Block), and System Management (Object, Class, Smalltalk, Process). The following sections will
+briefly describe each of these categories. Appendix 3 provides detailed de;.
+scriptions for each of the standard classes.
+
+\input{language/basobj}
+\input{language/collections}
+\input{language/control}
+\input{language/classman}
+\input{language/abstract}
+
+\secly{EXERCISES}
+
+\begin{enumerate}
+
+\item Suppose you created a new instance of the class UndefinedObject, as
+follows:
+\begin{lstlisting}
+    I~UndefinedObject new
+\end{lstlisting}
+How does i respond to print? To isNil or notNil? To the object comparison message = = with nil ? Is i nil? List facts to support your
+answer.
+
+\item Note that the messages arcSin and arcCos produce an object of type
+Radian and not oftype Float. Furthermore, only objects oftype Radian
+respond to sin and cos. An alternative would have been to eliminate
+the class Radian and to permit all objects of class Float to respond
+to the messages sin and cos. Discuss the advantages and disadvantages
+of these two different arrangements.
+
+\item Suppose you have a Bag containing numbers. How would you go about
+producing an instance of the class List containing the numbers listed
+in sorted order?
+
+\item What is the class of Class? what is the superclasss of Class?
+
+\item Many times, two ormore different sequences ofmessages to collections
+will have the same effect. In each of the following, describe a sequence
+of messages that will have the same effect ,\S the indicated message.
+\begin{enumerate}
+    \item implement reject: in terms of select:
+    \item implement size in terms of inject:into:
+    \item implement includes: in terms of inject:into:.
+\end{enumerate}
+
+\end{enumerate}
+
+\secup

@@ -1,0 +1,94 @@
+\secrel{Control Structures}
+
+One of the more surprising aspects of Smalltalk is the fact that control
+structures are not provided as part ofthe basic syntax but rather are defined
+using the message passing paradigm. The basic control structure in Smalltalk, as in most computer languages, is the conditional test: IF some condition is satisfied THEN perform some actions ELSE perform some other
+actions. In Smalltalk this is accomplished by passing messages to instances
+of class Boolean. The class True (a subclass of Boolean) defines methods
+for the messages ifTrue: and ifFalse: (similar methods are defined for class
+False). The arguments used with these messages are blocks. If the condition is satisfied (Le., the receiver is true and the message is ifTrue:, or
+the receiver is false and the message is ifFalse:), the argument block is
+evaluated, and the result it produces is returned. If the condition is not
+satisfied, the value nil is returned.
+\begin{lstlisting}
+        (3 < 5) ifTrue: { 17 ]
+    17
+        (3 < 5) ifFalse: { 17 ]
+    nil
+\end{lstlisting}
+
+The combined forms ifTrue:ifFalse: and ifFalse:ifTrue: are also recognized:
+\begin{lstlisting}
+        (3 < 5) ifTrue: { 17 ] ifFalse: { 23 ]
+    17
+        (3 > 5) ifTrue: { 17 ] ifFalse: { 23 ]
+    23
+\end{lstlisting}
+
+The message and: and or: are similar to ifTrue: and ifFalse:. They are
+also used with booleans and passed as arguments objects.of class Block.
+And: i and or: provide "short circuit" evaluation of booleans; that is, the
+argument block is evaluated only if necessary to determine the result of
+the boolean expression.
+\begin{lstlisting}
+((i < 10) and: { (b at: i) = 4] ifTrue: { i print]
+\end{lstlisting}
+In this example, the expression "(b at:i) =4" will be evaluated only if the
+expression <10<10)" is true. If the first expression returns false, the argument block used with the and: message is not 
+evaluated\note{In actual fact the Little Smalltalk parser will, for efficiency, often optimize conditions
+to remove the message passing overhead. Nevertheless, the underlying paradigm holds true
+and will, in fact, be used under some conditions (for example, when the arguments are not
+a block).}.' Notice that the
+relational < returns either true (an instance of class True) or false (an
+instance of class False) and that the message and: is implemented in class
+Boolean, a superclass of both True and False. Various other boolean
+operations, such as not are also defined in this class.
+
+Next to conditional tests, the most common control structure is a loop.
+A loop is produced by passing the timesRepeat: message with a parameterless bock as an argument to an integer. The value of the integer is the
+number of times to execute the loop. For example;
+\begin{lstlisting}
+        5 timesRepeat:{ 8 print]
+    8
+    8
+    8
+    8
+    8
+\end{lstlisting}
+will print the number 8 five times.
+
+A more general loop is used to produce numbers in arithmetic progression. The messages to: and to:by:, when passed to a number, produce
+an instance of class Interval. As we noted in the last section, an interval
+is a collection of values in arithmetic progression. We can then use the
+message do: to enumerate the elements in the progression. For example:
+\begin{lstlisting}
+        (2 to: 9 by: 3) do: [ :x I x print]
+    2
+    5
+    8
+\end{lstlisting}
+
+A more general form of loop is the while loop. A while loop is formed
+using blocks as both receiver and argument. The result of the receiver
+block must be a boolean. The actions performed by the block are to evaluate
+the receiver block and, as long as it returns true, to evaluate the argument
+block. For example, by using an additional variable the previous loop could
+have been written:
+\begin{lstlisting}
+        i~2.
+        [ i < = 9 ] whileTrue: [ i print. i i + 3 ]
+    2
+    5
+    8
+\end{lstlisting}
+Since both the receiver and the argument block can contain any number
+of expressions (the value of a block is always the value ofthe last expression,
+regardless of how many expressions the block contains), sometimes no
+argument block is necessary. The unary message whileTrue (or whileFalse) can then be used. For example:
+\begin{lstlisting}
+        i~2.
+        [i print. i i + 3 . i < = 9] whileTrue.
+    2
+    5
+    8
+\end{lstlisting}

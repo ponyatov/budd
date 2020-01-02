@@ -1,0 +1,210 @@
+\secrel{Collections}
+
+The different subclasses and varieties of Collection provide the means for
+managing and manipulating groups of objects in Smalltalk. The different
+forms of collections are distinguished by several characteristics, whether
+the size of the collection is \&ed or unbounded, the presence or absence
+of an ordering, and their insertion or access method. For example, an array
+is a collection with a fixed size and ordering, indexed by integer keys. A
+dictionary, on the other hand, has no fixed size or ordering and can be
+indexed by arbitrary elements. Nevertheless, arrays and dictionaries share
+many features, such as their access method (at: and at:put:) and their ability
+to respond to collect:, select:, and many other messages.
+
+The table below lists some of the characteristics of several forms of
+collections.
+
+\fig{language/tbl1.png}{width=\textwidth}
+
+Collections of one type can frequently be converted into collections of
+different type by sending an appropriate message, for example, asBag (to
+convert a collection into a Bag), asSet or asArray.
+
+We can group the operations into several categories, independent of
+the type of collection involved. The first basic action is adding an element
+to a collection. Here collections divide into two groups. Those collections
+that are indexed (Dictionary, Array) must be given an explicit key and
+value, and, thus, the insertion method is the two-argument message at.·put:.
+Those collections that are not indexed store only the value and thus use
+the one argument message add:. A special case of this is the class List,
+which maintains elements in a linear ordering. Here, values can be added
+to the beginning or end of the collection by using the messages addFirst:
+and addLast:.
+
+Protocols for adding an element to a collection are similar to those for
+removing an element from a collection. In collections that do not require
+a key, an element can be removed with the message remove:, the argument
+being the object to be removed. In keyed collections, the removal message
+uses the key (removeKey:), and not the value. In collections with fixed sizes
+(Array and String), elements cannot be removed. In a List, an element
+can be removed from either the beginning of the list (removeFirst) or the
+end of the list (removeLast).
+
+Once an element has been placed into a collection, the next step is to
+access the element. Those collections using keys require a key for access
+and use the message at:. For those that do not require a key, the only
+question (since one already has the value)-is whether the value is in the
+collection. Thus the appropriate message is includes: (which also works
+for keyed collections). A special case is List where one can access either
+the beginning or the end of the list by using the messages first and last.
+
+The access methods at: and includes: access a value by position. Frequently, however, one needs to access an element by value without knowing
+a position. For example, one may want to find the first positive element
+in an array of integers. To facilitate this search there is a message named
+detect:. The message detect: takes as an argument a one-parameter block.
+
+It evaluates the block on each element in the collection and returns
+the value of the first element for which the block evaluates true. For example, if x is an array containing numeric values, the message detect: could
+be used to discover the first positive value.
+\begin{lstlisting}
+    x # ( - 2 - 3 4 5)
+    x detect: [ :y Iy > 0 ]
+4
+\end{lstlisting}
+
+An error message is produced and nil returned if no value satisfies the
+condition. This can be changed using the message detect:ifAbsent:
+\begin{lstlisting}
+        x detect: [ :y I y > 10 ]
+    error: no element satisfies condition
+    nil
+        x detect: [ :y I y > 10] ifAbsent: [ 23 ]
+    23
+\end{lstlisting}
+
+In ordered collections, the search is performed in order, whereas in
+unordered collections, the search is implementation dependent, and no
+specific order is guaranteed.
+
+If, instead of finding the first element that satisfies some condition,
+you want to find all elements of a collection that satisfy some condition,
+then the appropriate message is select:. Like detect:, select: takes as an
+argument a one-parameter block. What it returns is another collection, of
+the same type as the receiver, containing those values for which the argument block evaluated true. A similar message, reject:, returns the complementary set.
+\begin{lstlisting}
+        x select: [ :y Iy > 0 ]
+    #( 45)
+        x reject: [ :y Iy > 0 ]
+    #( -2 -3)
+\end{lstlisting}
+
+The message do: can be used to perform some computation on every
+element in a collection. Like select: and reject:, this message takes a oneargument block. The action performed is to evaluate the block on each
+element of the collection.
+\begin{lstlisting}
+        x do: [ :y I(y + 1 ) print]
+    -1
+    -2
+    5
+    6
+\end{lstlisting}
+
+The message do: returns nil as its result. If, instead of performing a
+computation on each element, you want to produce a new collection containing the results, the message collect: can be used. Again like select: and
+reject:, this message takes as argument a one-parameter block and returns
+a collection of the same variety as the receiver. The elements of the new
+collection, however, are the results of the argument block on each element
+of the receiver collection.
+\begin{lstlisting}
+    x collect: [ :y Iy sign]
+#( -1 -1 1 1 )
+\end{lstlisting}
+
+Frequently the solution to a problem will involve processing all the
+values of a collection and returning a single result. An example would be
+taking the sum of the elements in a numerical array. In Little Smalltalk,
+the message used to accomplish this is inject:into: The message inject:into:
+takes two arguments: a value and a two-parameter block. The action performed in response to this message is to loop over each element in the
+collection, passing the element and either the initial value or the result of
+the last iteration as arguments to the block. For example, the sum of the
+array x could be produced using inject:
+\begin{lstlisting}
+    x inject: 0 into: [ :a :b I a + b ]
+4
+\end{lstlisting}
+The following command returns the number of times the value 4 occurs
+in x:
+\begin{lstlisting}
+    x inject: 0 into: [ :a :b I(a = = 4) ifTrue: [ b + 1 ] ifFalse: [ b ]]
+1
+\end{lstlisting}
+
+We have described the broad categories of messages used by collections. There are many other messages specific to certain classes; they are
+described in detail in Appendix 3. We next will provide a brief overview
+of the most common types of collections.
+
+The classes Bag and Set represent unordered groups of elements. An
+element may appear any number of times in a bag but only once in a set.
+Elements are added and removed by value.
+
+A Dictionary is also an unordered collection of elements; however,
+unlike a bag, insertions and removal of elements from a dictionary requires
+an explicit key. Both the key and value portions of a dictionary entry can
+be any object, although commonly the keys are instances of String, Symbol or Number
+
+The class Interval represents a sequence of numbers in an arithmetic
+progression, either ascending or descending. Instances of Interval are
+created by numbers in response to the message to: or to:by:. In conjunction
+with the message do:, an Interval creates a control structure similar to do
+or for loops in Algol-like languages.
+\begin{lstlisting}
+        (1 to: 10 by: 2) do: [ :x I x print]
+    1
+    3
+    5
+    7
+    9
+\end{lstlisting}
+Although instances of class Interval can be considered to be a collection,
+they cannot have additional elements added to them. They can, however,
+be accessed randomly using the message at:.
+\begin{lstlisting}
+    (2 to: 7 by: 3) at: 2
+5
+\end{lstlisting}
+
+A List is a group of objects having a specific linear ordering. Insertion
+and removal is from either the beginning or the end of the collection. Thus
+a list can be used to implement both a stack and queue.
+
+A File is a type of collection in which the elements of the collection
+are stored on an external medium, typically a disk. A file can be opened
+in one of three modes. In character mode every access or read returns a
+single character from the file. In Integer mode every read returns a single
+word as an integer value. In string mode every read returns a single line
+as an instance of class String. Elements cannot be removed from a file,
+although they may be overwritten. Because access to external devices is
+typically slower than access to memory, many of the operations on files
+may be quite slow.
+
+An Array is perhaps the most commonly used data structure in Little
+Smalltalk programs. Arrays have fixed sizes, and, while elements cannot
+be inserted or removed from an array, the elements can be overwritten.
+Literal arrays can be represented by a pound sign preceding a list of array
+elements, for example:
+\begin{lstlisting}
+#( 2 $a 'joel 3.1415 )
+\end{lstlisting}
+
+A String can be considered to be a special form of array, where the
+elements must be characters. In addition, as we have been illustrating in
+many examples, a literal string can be written by surrounding the text with
+quote marks.
+
+The class ByteArray represents a special form of array where each
+element must be a number in the range 0 through 255. Byte arrays are
+used extensively in the internal representations of objects in the Little
+Smalltalk system. Byte arrays can be written as a pound sign preceding a
+list of elements enclosed in square braces, for example:
+\begin{lstlisting}
+    #[ 0 127 32 115 ]
+\end{lstlisting}
+
+There are two other classesthat are commonly used to representgroups
+of data, although they are not subclasses of Collection. The class Point,
+already discussed, can be considered to be a small collection of two items.
+The class Random can be thought of as providing protocol for an infinite
+collection of pseudo-random numbers. This "list," of course, is never actually created in its entirety; rather each number is generated as required
+in response to the message next. The values produced by instances of class
+Random are floating values in the range 0.0 to 1.0. Other messages can be
+used to convert this into either an integer or a floating value in any range.

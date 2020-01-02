@@ -1,0 +1,44 @@
+\secrel{Basic Objects}
+
+The class Object is a superclass of all classes in the system and is used to
+provide a consistent basic functionality and default behavior. For example,
+the message = = is defined in class Object and is thus accepted by all
+objects in the Little Smalltalk system. This message tests to see if the
+expressions for the receiver and the argument represent the same object.
+Another message defined in class Object is the message class, which returns the object representing the class of the receiver.
+
+The last chapter introduced the classes associated with literal objects.
+other types of objects are also basic to many applications. For example,
+instances of the class Radian are used to represent radians. A radian is a
+unit of measurement, independent of other numbers. Only radians will
+respond to trigonometric functions such as sin and cos. Numbers can be
+converted into radians by passing them the message radians. Similarly,
+radians can be converted into numbers by sending them the message
+asFloat. Only a limited range of arithmetic operations on Radians, such
+as scaling by a numeric quantity or taking the difference of two radians,
+are permitted. Radians are normalized by adding or subtracting multiples
+of 2'11" from their value.
+
+The class Point is used to represent ordered pairs of quantities. Ordered pairs are useful in the solution of many problems, such as storing
+coordinate pairs in graphics applications. In fact, the class Number provides a convenient method for constructing points. All instances of class
+Number will respond to the message @ by producing a point consisting
+of the receiver and the argument. Thus 10 @ 12 generates a point representing the ordered pair (l0,12). The first value is known as the x-value
+and will be returned in response to the message x. The second value is the
+y-value and is returned in response to the message y
+
+The class String provides messages useful in manipulating arrays of
+characters. One important property of this class is that its instances are
+the only objects in the Little Smalltalk system that can be displayed on an
+output device such as a terminal or printer. Any object to be displayed
+must first be converted into an instance of class String. The behavior
+defined in class Object for the message print is to convert the object into
+a string (using the message printString) and then to print that string (by
+passing the message print to it).
+
+The message printString is uniformly interpreted throughout the Little
+Smalltalk system as "produce a string representation ofyour value." Classes
+for which this makes sense (such as Integer) must define a method for
+this message that will produce the appropriate string. By default (that is,
+by a method in class Object that will be invoked unless overridden), a
+string containing the name of the class of the object is produced. In subsequent chapters we will see several examples of how different classes
+respond to the message printString.

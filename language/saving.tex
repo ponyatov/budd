@@ -1,0 +1,47 @@
+\secrel{Saving Environments}
+
+Updating an employee database is not something you do once and then
+never again; rather it must be done periodically, as new employees are
+hired or retire. One way to update an employee database is to record the
+final values for the database on a slip of paper. Before the start of the next
+session you initialize the database by initializing each entry. This may be
+somewhat unsatisfactory; slips of paper tend to get lost. Since computers
+usually have a much better memory for such things, a good alternative is
+to use the Little Smalltalk system to save and restore environments. We
+use the term environment to denote the set of all objects accessible at any
+one time. The command
+
+\begin{lstlisting}
+    )s filename
+\end{lstlisting}
+
+\noindent
+saves a representation of the current environmerh in the indicated file. I In
+response to this command, a message indicating the number of bytes
+written to the file will be printed. These files tend to be rather large; too
+many of them can clutter your directory.
+
+After saving an environment, you can then continue execution or exit
+the Little Smalltalk system by typing control-D. A saved environment can
+later be restored by typing the command
+\begin{lstlisting}
+    )1 filename
+\end{lstlisting}
+
+\noindent
+This command loads the environment saved in the indicated file\note{The )s and )1 commands do not work on all machines on which the other portions
+of the Little Smalltalk system will operate. Check with your system manager, or experiment
+yourself, to see if they work on your system.}. Notice
+that in doing so, it totally erases the environment that existed before the
+)1 command was issued, replacing it with the restored environment. In
+response to this command, a message indicating the number of bytes read
+in will be produced. This figure should match the figure written after the
+)s command. All names that denoted accessible objects before the )s COffi
+mand are now valid, and the user can continue as if neither the )s nor the
+)1 commands had been issued.
+
+Note that the same environment can be loaded many times. Acommon
+use for this feature is for users to save an environment containing their
+favorite classes and objects that they have created. This environment can
+then be quickly loaded, and the classes will be available without having to
+issue )i commands for each one.

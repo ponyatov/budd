@@ -1,0 +1,20 @@
+\secrel{Comments and Continuations}
+
+A pair of double quote marks (II) are used to enclose a comment. One
+must be careful not to confuse the double quote mark with two adjacent
+single quote marks CI), which look very similar. The text of the comment
+can be arbitrary and is ignored by the Little SmaIItalk system.
+
+The Little Smalltalk system assumes that each line typed at the terminal
+is a complete SmaIItalk expression. Should it be necessary to continue a
+long expression on two or more lines, a special ineJication must be given
+to the Little SmaIItaik system to prevent it from misinterpreting the partial
+expression on the first line and generating an unintentional error message.
+This special indication is a backwards slash C""-) as the last character on
+all intermediate lines, for example:
+\begin{lstlisting}
+    2 +     \
+    3 * 7   \
+    + 5     \
+40
+\end{lstlisting}

@@ -1,0 +1,25 @@
+\secrel{Abstract Superclasses}
+
+We did not discuss the classes Collection, KeyedCollection,
+SequenceableCollection, or ArrayedCollection in the last section, even
+though they were listed as forms of "collection" in the beginning of this
+chapter. These classes, along with such classes as Boolean, Magnitude,
+or Number, are what are known as abstract superclasses. Instances of
+abstract superclasses are seldom useful by themselves, but the classes are
+important in providing methods that can be inherited by subclasses. For
+example, while it is legal in Smalltalk to say:
+\begin{lstlisting}
+x Collection new
+\end{lstlisting}
+and the resulting variable x will indeed be an instance of class Collection,
+the object is not particularly useful. It has no insertion or deletion protocol,
+for example. An instance of class Set, however, is very useful, and the
+messages defined in class Collection are important in providing functionality to objects of this class and to other subclasses of class Collection.
+
+The selection and design of abstract superclasses is one of the more
+important arts in Smalltalk programming. For example, if one were designing a system to manipulate banking accounts, a class Account might be
+a useful abstract superclass for classes CheckingAccount and
+SavingsAccount. The actions specific to the individual types of accounts
+would be in the subclasses, whereas any common behavior, such as the
+actions necessary for opening and closing an account or querying the
+balance, might be implemented in the superclass.

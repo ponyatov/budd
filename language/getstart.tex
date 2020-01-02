@@ -1,0 +1,31 @@
+\secrel{Getting Started}
+
+You now have enough information to try getting some hands-on experience
+using the Little Smalltalk system. After logging on, type the command st.
+After a moment, the message "Little Smalltalk" should appear, and the
+cursor should be indented by a small amount on the next line. If, at this
+point, you type in a Smalltalk expression and hit the return key, the expression will be evaluated and the result printed. Try typing "3 + 4" and see
+what happens. The result should be a 7, produced at the left margin. The
+cursor then should advance to the next line and once more tab over several
+spaces. Try typing "5 + 4 sqrt." Can you explain the outcome? Try "(5 +
+4) sqrt."
+
+Try typing
+\begin{lstlisting}
+i <- 3
+\end{lstlisting}
+Notice that, since assignment expressions do not have a value, no value
+was printed. However, if you now type
+\begin{lstlisting}
+i
+\end{lstlisting}
+the most recent object assigned to the name will be produced.
+
+The name last always contains the value of the last expression computed. Try typing
+\begin{lstlisting}
+27 + 3 sqrt
+\end{lstlisting}
+followed by
+\begin{lstlisting}
+last
+\end{lstlisting}

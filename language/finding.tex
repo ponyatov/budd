@@ -1,0 +1,62 @@
+\secrel{Finding Out About Objects}
+
+There are various messages that can be used to discover facts about an
+object. The message class, for example, will tell you the class of an object.
+Try typing
+\begin{lstlisting}
+7 class
+\end{lstlisting}
+The message superClass, when passed to an instance of Class, will return
+the immediate superclass of that class. Try typing
+\begin{lstlisting}
+Integer superClass
+7 class superClass
+\end{lstlisting}
+What is the superclass of Object?
+
+The keyword message respondsTo: can be used to discover if an object
+will respond to a particular message. The argument must be a symbol,
+representing the message. Try typing
+\begin{lstlisting}
+ 7 respondsTo: #+
+$A respondsTo: #between:and:
+$A respondsTo: #sqrt
+\end{lstlisting}
+When passed to a ciass, the message respondTo: inquires whetherinstances
+of the class respond to the given message. For example,
+\begin{lstlisting}
+Integer respondsTo: #+
+\end{lstlisting}
+
+You can discover if two objects are the same using the binary message
+==. The message \verb|~~| is the logical inverse of ==. Try typing
+\begin{lstlisting}
+i <- 17
+i == 17
+17~~17
+\end{lstlisting}
+
+One way to tell if an object is an instance of a particular class is to
+connect the unary message class and the binary message ==. Try typing
+\begin{lstlisting}
+i class == Integer
+\end{lstlisting}
+
+A simple abbreviation for this is the message isMemberOf:. For example, the last expression given is equivalent to
+\begin{lstlisting}
+i isMemberOf: Integer
+\end{lstlisting}
+
+Suppose we want to tell if an object is a Number, but we don't care if
+it is any particular kind of number (Integer or Float). We could use the
+boolean OR bar (I), which is recognized by the boolean values true and
+false:
+\begin{lstlisting}
+(i isMemberOf: Integer) | (i isMemberOf: Float)
+\end{lstlisting}
+A simplier method is to use the message isKindOf;. This message asks
+whether the class of the object, or any of superclasses, is the same as the
+argument. Try typing
+\begin{lstlisting}
+i isKindOf: Number
+\end{lstlisting}

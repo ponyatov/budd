@@ -1,0 +1,36 @@
+\secrel{An Illustrative Example}
+
+Figure 4.3 gives the complete class description of the class Set. A set is a
+collection of objects; each object occurs no more than once in the collection. (See Exercise 2.) The data structure used to implement the set will
+be a list. Recall that a list is also a collection but one that maintains values
+in order.
+
+\fig{language/fig_4_3_a.png}{width=.7\textwidth}
+
+\fig{language/fig_4_3_b.png}{width=.7\textwidth}
+
+As we have already seen, the class Set maintains one instance variable,
+list. Each instance of class Set will have a separate instance variable that
+cannot be accessed by any other object. The method for message new will
+automatically create an instance of class List in the variable list whenever
+an instance of class Set is created.
+
+When an element is added to a set, a test is first performed to see if
+the element is already in the set. If so, no further processing is done; if
+not, the element is added to the underlying Jist. Similarly, to remove an
+element, the actions in the method in Set merely pass the removal message
+on to the underlying list. Note that the long form of the remove: message
+is defined; it includes a second argument, indicating what actions should
+be taken if the given item is not found. As we saw in Figure 4.2, the class
+Collection defines the short message (re1110ve:) in terms of this longer
+message. Thus either form ofthe message can be used on a Set.
+
+The messages first and next are used to produce generators. Generators
+will be the topic of a later chapter; it is sufficient to say here that first and
+next provide a means to enumerate all elements in a collection. The message first can be interpreted informally as flinitialize the enumeration of
+items in the collection and return the first item, or nil if there are no items
+in the collection." Similarly, next can be defined as "return the next item
+in the collection, or nil if there are no remaining items." The protocol for
+do: (Figure 4.2) illustrates how these messages can be used to construct a
+loop to access every item in a collection. In Class Set, the generation of
+items in response to these messages is provided by passing the same messages to the underlying list.

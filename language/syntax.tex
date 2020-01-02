@@ -13,12 +13,53 @@
 с описания того, как объекты представлены.
 
 \input{language/literals}
+\input{language/idents}
+\input{language/messages}
+\input{language/getstart}
+\input{language/finding}
+\input{language/blocks}
+\input{language/conts}
 
-\secrel{Identifiers}
-\secrel{Messages}
-\secrel{Getting Started}
-\secrel{Finding Out About Objects}
-\secrel{Blocks}
-\secrel{Comments and Continuations}
+\secly{EXERCISES}
+
+\begin{enumerate}
+
+    \item Show the order of evaluation for the subexpressions in the following
+    expression:
+    \begin{lstlisting}
+        7/2 between: 7 + 17 sqrt and: 3 * 5
+    \end{lstlisting}
+
+    \item Type the following expressions:
+    \begin{lstlisting}
+        7 = = 7
+        label = = label
+        #abe = = #abc
+    \end{lstlisting}
+    How do you explain this behavior?
+    
+    \item What values will be printed in place of the question marks in the
+    following sequence:
+    \begin{lstlisting}
+            i <- 17
+            j<-[i< +1]
+            j print
+        ??
+            j print
+        ??
+            i < - 23
+            i print
+        ??
+            j value print
+        ??
+            i print
+        ??
+            j value print
+        ??
+            i print
+        ??
+    \end{lstlisting}
+
+\end{enumerate}
 
 \secup

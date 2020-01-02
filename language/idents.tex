@@ -1,0 +1,44 @@
+\secrel{Identifiers}
+
+Identifiers in Little Smalltalk can be divided into three categories: instance
+variables, class names, and pseudo-variables. An identifier beginning with
+a capital letter is always a class name, whereas an identifier beginning
+with a lowercase letter must represent either a pseudo variable or an
+instance variable.
+
+At the command level, new instance variables can be defined merely
+by assigning a value to a name. The assignment arrow is formed as a twocharacter sequence consisting of a less than sign and a minus sign
+\note{From now on the text will use the symbol $\leftarrow$ to represent this two-character sequence}:
+\begin{lstlisting}
+newname <- 17
+\end{lstlisting}
+
+Instance variables defined at the command level are known only at the
+command level and cannot be used within a method for any class. As we
+will see in a later chapter, instance variables within a class must all be
+declared.
+
+Class identifiers respond to a variety of messages that can be used to
+discover information concerning the class the object represents. For example, the message respondTo, when passed to an object representing a
+class, will cause the class to print a list of the messages to which instances
+of the class will respond.
+
+Pseudo variables look like normal identifiers (that is, they are named
+by a sequence of letters beginning with a lower case letter), but unlike
+identifiers they need not be declared. There are several pseudo variables:
+self, super, selfProcess
+\note{The pseudo-variables selfprocess and smalltalk are unique to Little Smalltalk and are
+not part of the \st-80 system, where different techniques are used to obtain the currently executing process or to obtain information about the current environment. See Appendix 5 for an overView of the differences between Little Smalltalk and the Smalltalk-80
+programming environment.}
+, true, false, nil, and smalltalk. Arguments for
+a method (to be discussed shortly) are also considered to be. pseudo-variables. Of the seven, self, super, and selfProcess are farthest from being
+literal objects because their meaning depends entirely upon context. We
+will discuss these in more detail when we describe class methods and
+processes. The next three, true, false, and nil, are defined to be instances
+(usually the only instances) of the classes True, False, and UndefinedObject, respectively. We will discuss these three in more detail when
+we outline the behavior of different classes. The final pseudo variable,
+smalltalk, is an instance of class Smalltalk and is used to centralize several
+pieces of information concerning the currently executing environment.
+
+Other types of objects in the Little Smalltalk system, such as blocks
+and instances of user defined classes, will be discussed in later sections.

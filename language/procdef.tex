@@ -1,0 +1,42 @@
+\secrel{Processing a Class Definition}
+
+Once you have created a class description, the next step is to add the class
+to the collection ofstandard classes provided by the Little Smalltalk system.
+Suppose, for example, you have defined a class Test in the file test.st; to
+add this class definition to a running Little Smalltalk execution you would
+type the following command in place of a Smalltalk expression:
+\begin{lstlisting}
+    )i test.st
+\end{lstlisting}
+
+The i can be thought of as mnemonic for "include." At this point the
+class description will be parsed, and, if there are syntax errors, a number
+of descriptive error messages will be produced. Ifthere are no syntax errors,
+the class definition will be added to the collection of classes known to the
+Little Smalltalk system. Whether there are syntax errors or not, the cursor
+should advance by one tab stop when the system is ready to accept the
+next command.
+
+If there are syntax errors, the class description can be edited without
+leaving the Little Smalltalk system. To do this, type the following command:
+\begin{lstlisting}
+    )e test.st
+\end{lstlisting}
+
+The )e command will place the user in an editor mode to view the
+designated file\note{On UNIX Systems the editor selected can be changed by modifying the EDITOR
+environment variable.}. When the user exits the editor, another attempt will be
+made to include the file, as if the )i command were typed.
+
+Once a class definition has been successfully included, the defined class
+can be used the same as any other class in the Little SmalltaIk system. For
+example, a new instance can be created using the command new.
+\begin{lstlisting}
+    i~Te5t new
+\end{lstlisting}
+
+There are other system commands, similar to )i and k, described in
+Appendix 1. These commands are provided with an alternative syntax,
+rather than as messages passed to smalltalk, because they are used during
+the bootstrapping process before any objects have been defined. The bootstrapping of the Little Smalltalk system will be discussed in the second
+section of this book.

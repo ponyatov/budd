@@ -1,0 +1,373 @@
+\secrel{A Simple Application}\secdown
+
+This chapter illustrates the development of a simple application in
+Smalltalk and describes how environments can be saved and restored.
+
+\bigskip
+
+This chapter depicts the development of a simple Smalltalk application.
+The application chosen, a tool to help keep track of employee information
+in a small business, is considerably less important than the design techniques being illustrated.
+
+The first, and probably one of the most important steps, is deciding
+exactly what you want to do. This involves not only stating the desired
+functionality, but also describing the intended user interface (the set of
+messages to which the application should respond).
+
+Because programming in Smalitalk is so easy compared to many other
+programming languages, a particularly attractive technique of developing
+an application is rapid-prototyping. Using this technique, you first define
+a minimal system that will still exhibit the important aspects of the desired
+functionality. That is, you strive to find the core of the functions you want
+at the expense of enhancements or features you might think ultimately
+desirable. You then design the simplest, most straightforward implementation of this bare system, ignoring for the moment such features as user
+friendliness and efficiency.
+
+Once you have an executable system, you experiment with it. There is
+a great psychological benefit to having an executing system, even one that
+is very simple. High level logical mistakes are most easily exposed with
+the aid of an executing system, and thus a working version helps considerably in getting more complex versions mnning. An important aspect of
+software is its feel, a notion nearly impossible to define and almost as
+difficult to predict before you have a working system.
+
+The n~cessity for devoting time to a complete and thorough job of
+specification and design cannot be understated. However, it is likely that
+there will be many changes in the design stage of any realistic piece of
+softwar:e. It js also likely (perhaps unfortunately) that the user's concept
+of the problem at hand and the correct solution also will change as the
+user's experience with the initial versions increases. Users often discover
+that the set of enhancements they thought were important before a project
+was implemented are not the same as those they want after experimenting
+with the initial version. Thus time spent creating a complete system, beyond a minimal system for experimentation purposes may not be productive. (Even with the best planning it may be necessary to throwaway at
+least one version, and oftentimes more, and start anew. This is not a sign
+of poor programming practice. It is far better to throwaway the first
+attempt at a program, after learning from the mistakes, and to rewrite it
+than to take a poorly designed and less than adequate program and try to .
+fix it by "patching.")
+
+What is the minimal functionality we could desire for our employee
+database? At the simplest, we must be able to add and delete information
+from the records. But what information? Let us start with four fields:
+
+\medskip
+\begin{tabular}{l l}
+    name        & a string giving the name of the employee \\
+    idNumber    & a unique internal identification number \\
+    position    & a symbol representing the employee job classification \\
+    salary      & a number giving the salary of the employee \\
+\end{tabular}
+
+\medskip
+In a realistic situation there would probably be many more fields one
+would want to maintain (length of employment, social security number,
+department, and so on) but the four fields listed are sufficient for our
+examples. For a first approximation, we need not create any new classes
+at all. We can merely use an instance of class Dictionary as our database
+and an Array for each employee. The key for each dictionary entry can be
+the employee number (since they must be distinct, and names may not
+be) and the value field can be the rest of the information.
+
+\begin{lstlisting}
+    employeeDatabase Dictionary new
+    employeeDatabase at: 14737 put: # ( 'David Smith ' # clerk 14000 )
+    employeeDatabase at: 16432 put: # ( 'Roger Jonesl # clerk 13500)
+    employeeDatabase at: 2431 put: #( 'Fred Brown' # president 68020 )    
+\end{lstlisting}
+
+Information on a particular employee can be extracted using at:
+
+\begin{lstlisting}
+    employeeDatabase at: 16432
+# ( lRoger Jonesl # clerk 13500 )
+\end{lstlisting}
+
+Searches of various sorts can be performed by using select:
+
+\begin{lstlisting}
+        employeeDatabase select: [:x I (x at: 2) = = # president]
+    Dictionary ( 2431 @ #( 'Fred Brown ' president 68020 ) )
+        employeeDatabase select: [:x I (x at: 3) < 20000 ]
+    Dictionary ( 14737 @ #( 'David Smithl #c1erk 14000 )
+        16432 @ # ( 'Roger Jonesl # clerk 13500 ) )
+\end{lstlisting}
+
+Output which looks slightly better can be obtained by using do:
+
+\begin{lstlisting}
+    employeeDatabase do: [:x I x at: 3) < 20000) ifTrue: [ x print] ]
+    #( 'David Smith' #c1erk 14000)
+    #( 'Roger Jonesl
+    #c1erk 13500)
+\end{lstlisting}
+
+A record can be updated by combinations of at: and at:put:
+
+\begin{lstlisting}
+    (employeeDatabase at: 16432) at: 3 put: 13750
+    employeeDatabase at: 16432
+    # ( 'Roger Jonesl
+    # clerk 13750)
+\end{lstlisting}
+
+While it required almost no work to produce this first approximation,
+it is obvious that this scheme has some deficiences. One ofthe most serious
+deficiencies is that the user of the database must know the position of each
+field in the employee record in order to understand or update the information. One mistake in updating (using the wrong field number, for example) can damage the record badly. Therefore our first improvement will
+be to replace each employee record with an instanc~ of a new class, EmployeeRecord. Instances of EmployeeRecord will themselves contain
+instance variables for each field of interest. A pair of messages is defined
+for each field: one to set the value and one to return it. The following class
+description shows one of these pairs.
+
+\begin{lstlisting}
+    Class EmployeeRecord
+    I name idNumber position salary I
+    [
+    name: aString
+    name aString
+    name
+    t name
+    ...
+    ]
+\end{lstlisting}
+
+We still use a Dictionary for the entire database but replace the entries
+in the dictionary by instances of EmployeeRecord. In a certain sense we
+have complicated matters since it is now necessary to initialize each field
+separately. Also it is now possible to retrieve only a single field, not the
+entire structure, of the employee record.
+
+\begin{lstlisting}
+    employeeDatabase Dictionary new
+    employeeDatabase at: 2431 put: EmployeeDatabase new
+    (employeeDatabase at: 2431) name: IFred Brown'
+    (employeeDatabase at: 2431) position: #president
+    (employeeDatabase at: 2431) salary: 68020
+    employeeDatabase at: 2431
+    EmployeeRecord
+    (employeeDatabase at: 2431) position
+    #president
+\end{lstlisting}
+
+Let us deal first with the problem of the difficulty in retrieving all
+information at once. The message printString is used uniformly throughout
+the Little Sn1alltalk system to produce a printable representation of an
+object. If no method is provided for this message, the default method (in
+class Object) produces the class name, as illustrated above. We can produce a more meaningful output, however, by concatenating the various
+fields with strings showing the field names.
+
+\begin{lstlisting}
+    printString
+    t Iname: II name,
+    I position: I, position,
+    Isalary: I I salary
+\end{lstlisting}
+
+Now when we try to print an individual record, the result is more helpful
+
+\begin{lstlisting}
+    employeeDatabase at: 2431
+name: Fred Brown position: president salary: 68020
+\end{lstlisting}
+
+The solution to the problem of initialization is slightly more complicated. As a first step, we can create a new message initialize and use the
+message getString with the pseudo variable smalltalk to return a string in
+response to a prompt. In order for the prompt and the response to appear
+on the same line, we use the printing command printNoReturn.
+
+\begin{lstlisting}
+    initialize
+    Iname: I printNoReturn.
+    name <E-- smalltalk getString.
+    'position: I printNoReturn.
+    position <E-- smalltalk getString asSymbol.
+    'salary: I printNoReturn
+    salary <E-- smalltalk getString aslnteger
+\end{lstlisting}
+
+Thus we can initialize all the fields at the same time with one command:
+\begin{lstlisting}
+    employeeDatabase <E-- Dictionary new
+    employeeDatabase at: 2431 put: EmployeeRecord new
+    (employeeDatabase at: 2431) initialize
+    name: Fred Brown
+    position: president
+    salary: 68020
+    employeeDatabase at: 2431
+    name: Fred Brown position: president salary: 68020
+\end{lstlisting}
+
+There is a shortcut in Smalltalk to make the initialization of newly
+created objects easier. If the class of an object defines a method for the
+message new, then this message is passed to each new instance of that
+class as it is created, before the new object is returned to the user. Thus,
+we can define the following message in class EmployeeRecord:
+
+\begin{lstlisting}
+    new
+        self initialize
+\end{lstlisting}
+
+The message initialize will then be sent automatically to each new instance
+of EmployeeRecord.
+
+\begin{lstlisting}
+    employeeDatabase <E-- Dictionary new
+    employeeDatabase at: 2431 put: EmployeeRecord new
+    name: Fred Brown
+    position: president
+    salary: 68020
+    employeeDatabase at: 2431
+    name: Fred Brown position: president salary: 68020
+\end{lstlisting}
+
+One can update a record in the same manner as initialization. That is,
+to update a record on a specific individual, you merely pass the message
+initialize to the record for that-individual and retype the information, making changes where appropriate. We still can use the messages we defined
+at the start to update single fields individually. Both of these alternatives
+may be error prone. A better scheme would be to display each field as it
+is currently contained in the database, then making any changes desired.
+As with initialize, the system would prompt for each field, giving the current
+value of the field. If the user merely typed return, the current value would·
+be retained.
+
+\begin{lstlisting}
+    (employeeDatabase at: 2431) upDate
+    name (Fred Brown):
+    position (president):
+    salary (68020): 72000
+    employeeDatabase at: 2431
+    name: Fred Brown position: president salary: 72000
+\end{lstlisting}
+
+\noindent
+Here only the salary field was changed.
+
+Note that we are performing the same actions for each field. Thus it
+is easier to abstract the desired behavior into a lower level message, passing
+messages to self for each individual field. For that lower level message, it
+is necessary to print the prompt, including the current value; retrieve the
+user's response, and, if blank, return the current value, or, if not blank,
+return the user's response. Thus there are two essential pieces of information that must be passed as arguments; namely, the string with which
+to prompt and the current value for the field. We can write upDate as
+follows:
+
+\begin{lstlisting}
+    upDate
+    name self promptString: Inamel currentValue: name
+    position (self promptString: 'position' currentValue: position) asSymbol
+    salary (self promptString: 'salari currentValue: salary) aslnteger
+    I
+    promptString: aString currentValue: aValue Ireply I
+    ( promptString, 1( I, currentValue, I ):1) printNoReturn.
+    reply smalltalk getString.
+    (reply size = 0)
+    ifTrue: [ i currentValue]
+    ifFalse: [ t reply]
+\end{lstlisting}
+
+Now let us return once more to the representation of the database as
+a whole. We have up to this point merely been using an instance of class
+Dictionary and the insertion and deletion messages at: and at.·put:. Thus
+the abstract actions, namely creating, updating, and listing employee entries, must be phrased (sometimes awkwardly) in terms of messages Dictionary understands. (Recall the messages required to list all employees
+with salaries less than 20,000, for example.) A better scheme would be to
+create a new class, like EmployeeDatabase, that would respond to messages more appropriate for our application. A set of messages might be
+the following:
+
+\begin{lstlisting}
+newEmployee
+\end{lstlisting}
+
+create a new employee record.
+
+\begin{lstlisting}
+    upDate: aNumber
+\end{lstlisting}
+
+update the fields for the employee with the given number.
+
+\begin{lstlisting}
+    list: aBlock
+\end{lstlisting}
+
+print out information on all employees that satisfy the condition given
+by the argument block.
+
+A typical session using this class might appear as follows:
+\begin{lstlisting}
+    employeeDatabase EmployeeDatabase new
+    employeeDatabase newEmployee
+    id: 2431
+    name: Fred Brown
+    position: president
+    salary: 68020
+    employeeDatabase update: 2431
+    name (Fred Brown):
+    position (president):
+    salary (68020): 72000
+    employeeDatabase list: [:x Ix position = #president]
+    name: Fred Brown position: president salary: 7200
+\end{lstlisting}
+
+The new database must still retain the information somewhere. One
+way is to maintain an internal dictionary. This can be established at the
+time an instance of the database class is created, using the special semantics of the new message.
+\begin{lstlisting}
+    Class EmployeeDatabase
+    Irecords I
+    [
+    new
+    records Dictionary new
+    ...
+    ]
+\end{lstlisting}
+
+The messages upDate: and list: merely pass appropriate commands to
+the dictionary.
+\begin{lstlisting}
+    upDate: idNumber
+    (records at: idNumber) upDate
+    list: condition
+    records do: [:x I(condition value: x) ifTrue: [ x print] ]
+\end{lstlisting}
+
+The message new Employee requires an additional prompt to return
+the employee number.
+
+\begin{lstlisting}
+    newEmployee I newNumber I
+    lid: I printNoReturn.
+    newNumber smalltalk getString aslnteger.
+    records at: newNumber put: EmployeeRecord new
+\end{lstlisting}
+
+The exercises propose various further extensions that could be made
+to this application
+
+\input{language/saving}
+
+\secly{EXERCISES}
+
+\begin{enumerate}
+
+    \item Add messages to delete employees from the database.
+
+    \item Is it necessary to have both the messages initialize and upDate in EmployeeRecord ? Can one be replaced with the other? What changes
+    would the user notice?
+
+    \item As it stands, the application is rather lax about error checking. Add
+    checks to make sure a new employee record does not override an older
+    one and that a request to update specifies a valid employee identification number.
+
+    \item In the scheme described in this chapter, identification numbers are
+    different from the other fields in the employee record. They are kept
+    oilly as keys in the database and not as part of the record, for example.
+    Change the class EmployeeRecord so that it maintains the identification number as part of the record. What changes are then required
+    in EntployeeDatabase ?
+
+    \item Instead of maintaining an instance of Dictionary in EmployeeDatabase, one could make it a subclass of Dictionary. How would
+    this change the methods for this class? What are the advantages and
+    disadvantages of both schemes?
+
+\end{enumerate}
+
+\secup

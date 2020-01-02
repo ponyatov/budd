@@ -1,0 +1,172 @@
+\secrel{Class Definition}\secdown
+
+В этой главе представлен синтаксис, используемый для определения классов, и пример определения.
+
+\bigskip
+
+The last chapter introduced some of the standard classes in the Little
+Smalltalk system. This chapter will show how the user can define new
+classes to provide additional functionality for the Smalltalk language.
+
+Class descriptions cannot be entered directly at the keyboard during
+a Little Smalltalk session. Instead, class descriptions must be prepared
+beforehand in a file, using a standard editor. There can be any number of
+class descriptions in a file, although it is convenient to keep each class
+description in a separate file for ease in program development. The textual
+representation of a class description consists of two main parts, the class
+Heading, followed by a sequence of one or more m.ethod descriptions. We
+will discuss each portion in turn. The syntax for class descriptions is given
+in detail in Appendix 2.
+
+Figure 4.1 shows a prototypical class description, in this case the description for the class Set. The initial part of the description, the class
+header, consists of the keyword Class (the first letter capitalized) followed
+by a class name (also capitalized). Following the class name, the superclass
+name preceded by a colon, is given. The superclass name is optional and,
+if not given, the class Object will be assumed.
+
+After the class and superclass names, the class description lists instance
+variable names. Instaqce variables provide the local memory for instances
+of the class. Each class instance is given its own set of instance variables,
+and no other object can modify or change an instance variable in another
+object. The list of instance variable names is surrounded by a pair of
+vertical bars. Note that Smalltalk has no notion of variables being declared
+to be of a specific type, thus any instance variable can contain any accessible
+object or expression. Although the syntax is free form, it is conventional
+to place the instance variables on a line separate from the class name.
+Instance variables are initially given the value nil. Ifa class does not contain
+any instance variables, the entire list, including the vertical bars, can be
+omitted. Following the heading, a pair ofsquare braces surround the methods that comprise the protocol for the class
+
+Each method in the class protocol defines how instances of the class
+will respond.to a single message. The particular message being defined by
+the method is given by the message pattern. The pattern is the first of the
+three major portions ofa method; the other two portions are a list of
+temporary variables and the message body.
+
+\fig{language/fig_4_1.png}{height=.6\textheight}
+
+A message pattern defines both the name of the message for which the
+method is providing protocol and the names to be used when referring to
+parameters associated with the message. There are three forms of message
+pattern, corresponding to the three forms of messages (unary, binary, and
+keyword). Example methods using two of those forms are given in Figure
+4.2. These methods are from class Collection. Note that method descriptions are separated by vertical bars. The one exception to the free form
+notation for class descriptions is that this vertical bar must appear in the
+first column.
+
+An optional list of temporary identifier names can appear following a
+message pattern. For example, the message description for the message
+do: in Figure 4.2 lists a temporary identifier named item. Temporary identifiers are created when the method is initiated in response to a message,
+and they exist as long as the message body is being executed or there is a
+block in existence that can refer to the temporary value. Like instance
+variables, temporary variables are initially given the value nil.
+
+A method body consists of a sequence of one or more Smalltalk expressions separated by periods. Note that the period is an expression separator,
+not an expression terminator, and does not follow the final expression in
+the method body. The final expression in a method body, or the final
+expression in any block created within the method body, can be preceded
+by an up arrow to indicate that the following expression is to be returned
+as the response to the message. (On some terminals the up arrow looks
+like a <lcaret" or".) If no explicit value is returned, the default action at the
+end of a method is to return the receiver as the response to the messae.
+
+\fig{language/fig_4_2.png}{width=\textwidth}
+
+\clearpage\noindent
+Note that the up arrow indicates an immediate return from the current
+method description even ifthe arrow occurs within a block. This is different
+from a block returning a value, which, as we saw in Chapter 2, is implicitly
+the value of the last expression in the block.
+
+Within a method body there are four types of variables that can be
+accessed, namely instance variables, argument variables, temporary variables, and pseudo variables. In addition to the pseudo variables discussed
+in the last chapter (true, false, nil and smalltalk), the pseudo variables
+self, super, and selfProcess can be used. Both the variables self and super
+refer to the receiver of the current message. When a message is passed to
+self, the search for a method begins with the class description associated
+with the class of the receiver. On the other hand, when a message is passed
+to super, the search begins with the class description of the superclass of
+the class in which the current message is defined. For example, if an
+expression in class Set (Figure 4.1) passed a message to super, the search
+for a matching method would begin in class Collection, the superclass of
+class Set. Amessage passed to selfwould initiate a search for an associated
+method in class Set.
+
+To illustrate the actions of self, suppose variable "x" is an instance of
+class Set. The methods shown in Figure 4.2 are from class Collection, a
+superclass of class Set. In response to the message "x isEnzpty, " the method
+isEmpty shown in Figure 4.2 is initiated. This method, in turn, passes the
+message size to the pseudo variable self, which in this case represents x.
+Thus the search for a nlethod matching the message size would begin in
+class Set, the class of x. If, on the other hand, the method for isEmpty had
+passed the message size to the pseudo variable super, the search for a
+corresponding method would have begun in the class Object, the super
+class of Collection.
+
+Two messages are singled out for special treatment. If either of the
+messages new or new: is defined in a class protocol, then, when an instance
+of that class is created, the associated message (either new or new:) will
+automatically be passed to the new instance before any further processing.
+Thus, these messages can be used to provide automatic initialization of
+instance variables. The next section describes in detail one class, the class
+Set, and illustrates the use of this feature.
+
+\input{language/example}
+\input{language/procdef}
+
+\secup
+
+\secly{EXERCISES}
+
+\begin{enumerate}
+
+\item A Bag is similar to a Set; however, each entry may occur any number
+of times. One way to implement the class Bag would be to use a
+dictionary, similar to the way a List was used to implement the class
+Set in Figure 4.3. The value contained in the dictionary for a given
+entry would represent the number of times the entry occurs in the bag.
+The framework for such an implementation is shown below. Change
+the name of the class from Bag to MyBag, and complete the implementation of class Bag.
+\begin{lstlisting}
+    Class Bag :Colleetion
+    I diet count I
+    [
+    new
+    dict~Dictionarynew
+    several missing methods
+    first
+    (count diet first) isNil ifTrue: [ t nil].
+    count count - 1.
+    t diet currentKey
+    next
+    [count notNil]whileTrue:
+    [(eount>O)
+    ifTrue:[eount~eount-1. t diet currentKey]
+    ifFaIse: [eou nt~ iet next]].
+    t nil
+\end{lstlisting}
+Keep in mind that instances of Dictionary respond to first and next
+with values and not keys. However, the current key is accessible if you
+use the message currentKey
+
+\item The collections described in Chapter 3 were all linear, meaning they
+could all be represented by a linearly written list. A common nonlinear
+data structure in computer science is the binary tree. Implement the
+class BinaryTree. Instances of BinaryTree contain a left subtree (or
+nil), a right subtree (or nil), and a value. Instances of the class should
+respond to the following messages:
+
+\begin{tabular}{l p{8cm}}
+    left & Return the left subtree, usually either nil or other instances of BinaryTree. \\
+    left: & Set the left subtree to the argument value. \\
+    right & Return the right subtree. \\
+    right: & Set the right subtree to the argument value. \\
+    value & Return the value of the current node. \\
+    value: & Set the value of the current node to the argument. \\
+\end{tabular}
+
+\noindent
+How should instances ofBinaryTree respond to the enumeration messages first and next? How about print or printString? What should be
+.the superclass of BinaryTree?
+
+\end{enumerate}

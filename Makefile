@@ -8,13 +8,18 @@ REL = $(shell git rev-parse --short=4 HEAD)
 TEX  = $(MODULE).tex header.tex
 TEX += language/language.tex language/preface.tex language/history.tex language/about.tex language/getit.tex
 TEX += language/basics.tex language/objects.tex language/backread.tex
-TEX += language/syntax.tex language/literals.tex
+TEX += language/syntax.tex language/literals.tex language/idents.tex language/messages.tex 
+TEX += language/getstart.tex language/finding.tex language/blocks.tex language/conts.tex
+TEX += language/classes.tex language/basobj.tex language/collections.tex language/control.tex language/classman.tex language/abstract.tex
+TEX += language/classdef.tex language/example.tex language/procdef.tex language/app.tex language/saving.tex
 TEX += implement/implement.tex
 TEX += refs.tex
 TEX += projects/projects.tex
 
 IMG  = little.jpeg
 IMG += language/fig_1_1.png language/fig_1_2.png language/fig_1_3.png
+IMG += language/tbl1.png language/fig_4_1.png language/fig_4_2.png
+IMG += language/fig_4_3_a.png language/fig_4_3_b.png
 
 LATEX = pdflatex -halt-on-error
 
