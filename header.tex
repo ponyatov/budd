@@ -44,3 +44,37 @@
 \newcommand{\secly}[1]{\section*{#1} \addcontentsline{toc}{section}{#1} \refstepcounter{section}}
 \newcommand{\subsecly}[1]{\subsection*{#1} \addcontentsline{toc}{subsection}{#1}  \refstepcounter{subsection}}
 
+% computer-related markup: manuals, listings, CS
+
+%% listings
+\usepackage{verbatim}
+\usepackage{listings}
+\lstset{
+basicstyle=\small,
+frame=single,
+numbers=left,numberstyle=\small,numbersep=2mm,
+tabsize=4,
+keywordstyle=\textbf,
+commentstyle=\color{blue}\textbf
+}
+\newcommand{\lst}[2]{\lstinputlisting[title=#2]{#1}}
+
+%% languages
+\newcommand{\st}{\texttt{Smalltalk}}
+\newcommand{\ci}{$C$}
+
+%% program elements
+\newcommand{\class}[1]{\textbf{\texttt{#1}}}
+\newcommand{\fn}[1]{\texttt{#1}}
+\newcommand{\var}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\texttt{#1}}
+
+% [nosep] option in lists/enums
+\usepackage{enumitem}
+% frame box
+\usepackage{framed}
+% misc
+\newcommand{\email}[1]{$<$\href{mailto:#1}{#1}$>$}
+\renewcommand{\emph}[1]{\textcolor{blue}{#1}}
+\newcommand{\term}[1]{\textcolor{green}{#1}}
+\newcommand{\note}[1]{\,\footnote{\ #1}}
