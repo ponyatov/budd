@@ -1,0 +1,44 @@
+\secrel{Goal-Directed Evaluation}
+
+A useful programming technique when used in conjunction with generators is
+goal-directed evaluation. By this technique, a generator is repeatedly queried
+for values until some condition is satisfied. In a certain sense the notion of
+filters we have just described represents a simple form of goaldirected
+evaluation. The goal of instances of FactorFilter, for example, is to find a
+value from the underlying generator for which the given number is not a factor.
+In the more general case of goal directed evaluation, the condition frequently
+involves the outcome of several generators acting together. An example will
+illustrate this Il1ethod.
+
+Consider the problem of placing eight queens on a chess board in such a way that
+no queen can attack any other queen (Figure 8.3). In this section we will
+describe how such a problem can be formulated and solved using generators,
+filters, and goal directed evaluation.
+
+We first observe that in any solution, no two queens can occupy the same column,
+and that no column can be empty. We can therefore assign a specific column to
+each queen at the start, and reduce the problem to finding a correct row
+assignment for each of the eight queens.
+
+In general terms, our approach will be to place queens from left to right (the
+order in which we assign numbers to columns). An acceptable solution for column
+n is one in which no queen in columns 1 through n can attack any other queen in
+those columns. Once we have found an acceptable solution in column 8 we are
+finished. Before that, however, we can formulate the problem of finding an
+acceptable solution in column n recursively, as follows:
+
+\begin{enumerate}
+    \item Find an acceptable solution for column n - 1. If there is none, return
+    nil, there is no acceptable solution. Otherwise, place the queen for column
+    n in row 1. Go to step 2.
+    \item Test to see if any queen in columns 1 through n - 1 can attack the
+    queen in column n. If not, then an acceptable solution has been found. if
+    the queen can be attacked, then go to step 3.
+    \item If the queen for column n is in row 8, go to step 4, otherwise advance
+    the queen by one row and go back to step 2.
+    \item Find the next acceptable solution for column n - 1. If there is none,
+    return nil, otherwise, place the queen for column n in row 1 and go to step
+    2.
+\end{enumerate}
+
+\fig{language/fig_8_3.png}{height=.7\textheight}

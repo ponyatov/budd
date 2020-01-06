@@ -1,0 +1,72 @@
+\secrel{A Simulation}\secdown
+
+This chapter presents a simple simulation of an ice cream store, illustrating
+the ease with which simulations can be described in Smalltalk.
+
+\bigskip
+
+The programming paradigm employed in Smalltalk, that of a large number of
+independent objects communicating via message passing, is particularly suitable
+for constructing simulations of processes that can be described as the
+interaction of a finite number of events. Each object can represent some object
+in the simulation model, with the local memory of the object maintaining
+information about the state of the model object. Messages correspond to
+interaction between the simulation objects. Indeed, the language was developed
+largely with just such applications in mind. This chapter will illustrate the
+construction of a simple simulation describing the operation of an ice cream
+store. The reader interested in more extensive simulation techniques can consult
+some of the references listed at the end of this chapter.
+
+\input{language/icecream}
+\input{language/further}
+
+\secly{Excersises}
+
+\begin{enumerate}
+    
+    \item Deciding when to use subclassing and when to use an instance variable
+    is not always easy. An argument can be made that DiscreteProbability should
+    really be a subclass of Random, such as the following:
+    \begin{lstlisting}
+        Class DiscreteProbability :Random
+I weights max I
+[
+    defineWeights: anArray
+weights anArray.
+max anArray inject: 0 into: [:x :y I x + y]
+next Iindex value I
+value super randlnteger: max.
+index 1.
+[value> (weights at: index)]
+whileTrue: [value value - (weights at: index).
+index index + 1].
+t index
+    \end{lstlisting}
+    Look at the class description for Random, in particular the response . to
+    the message randlnteger:, and then describe why this class description will
+    not produce the desired result.
+
+    \item An alternative method of defining a discrete probability is to provide
+    the actual sample space in a collection. For example, suppose a group of
+    boys are observed to have heights represented by the array \#(60 54 60 62
+    50). We can then ask for the height of a randomly selected boy. The
+    following shows how a class SampleSpace might be used for this purpose:
+    \begin{lstlisting}
+        sample SampleSpace new; define: #(60 54 60 62 50)
+        sample first
+    60
+    \end{lstlisting}
+    Producy a class description for SampleSpace.
+
+    \item If written in a manner analogous to DiscreteProbability, the class
+    SampleSpace defined in the last exercise is said to provide Ilrandom
+    selection with replacement.II The alternative, random selection without
+    replacement, is frequently more useful. For example, a sample space might
+    represent a deck of cards, and a random selection, the choosing of a card.
+    This card should then be thought of as being removed from the deck and not
+    available for return in subsequent selections. Describe how to modify the
+    class SampleSpace to provide random selection without replacement.
+    
+\end{enumerate}
+
+\secup

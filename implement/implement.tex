@@ -1,70 +1,13 @@
-\secrel{The Implementation}\secdown
+\secrel{Реализация языка \st}\secdown
 
-\secrel{Implementation Overview}\secdown
+\input{implement/overview}
 
-This chapter describes the features that make an interpreter for the
-Smalltalk language different from, say, a Pascal compiler. Provides a
-high-level description of the major components in the Little Smalltalk
-system.
+\input{implement/objects}
 
-\secrel{Identifier Typelessness}
-\secrel{Unscoped Lifetimes}
-\secrel{An Interactive System}
-\secrel{A Multi-Processing Language}
-\secrel{System Overview}
+\input{implement/bytecode}
 
-\secup
+\input{implement/process}
 
-\secrel{1he Representation ofObjects}\secdown
-
-The internal representation of objects in the Little Smalltalk system is
-described in this chapter, which also overviews the memory management algorithms. 
-The chapter ends with a discussion of several optimizations used to 
-improve the speed of the Little Smalltalk system.
-
-\secrel{Special Objects}
-\secrel{Memory Management}
-\secrel{Optimizations}
-
-\secup
-
-\secrel{Bytecodes}\secdown
-
-The techniques used to represent methods internally in the Little Smalltalk system are described in this chapter.
-
-\secrel{The Representation of Methods}
-\secrel{Optimizations}
-\secrel{Dynamic Optimizations }
-
-\secup
-
-\secrel{The Process Manager}\secdown
-
-This chapter presents a more detailed view of the central component
-of the Little Smalltalk system, the process manager. It then goes on to
-describe the driver, the process that reads commands from the user
-terminal and schedules them for execution. The chapter ends by describing the class parser and the internal representation of classes.
-
-\secrel{The Driver}
-\secrel{The Class Parser}
-
-\secup
-
-\secrel{The Interpreter}\secdown
-
-This chapter describes the actions of the interpreter and the courier
-in executing bytecodes and passing messages. It ends by describing
-the primitive handler and the manipulation of special objects.
-
-\secrel{Push Opcodes}
-\secrel{Pop Opcodes}
-\secrel{Message-Sending Opcodes}
-\secrel{Block Creation}
-\secrel{Special Instructions}
-\secrel{The Courier}
-\secrel{The Primitive Handler}
-\secrel{Blocks}
-
-\secup
+\input{implement/interpre}
 
 \secup

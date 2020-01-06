@@ -1,0 +1,165 @@
+\secrel{Generators}\secdown
+
+This chapter introduces the concept of generators and shows how generators can
+be used in the solution of problems requiring goaldirected evaluation.
+
+\bigskip
+
+In Little Smalltalk, the term generator describes any object that represents a
+collection of other objects and that responds to the following two messages:
+\begin{description}
+    \item{first} The response should be an element of the collection, or the
+    special value nil if there are no elements in the collection.
+    \item{next} The response should be another element in the collection, or nil
+    if there are no more elements in the collection.
+\end{description}
+
+For example, instances of the standard data structures, such as Array, String,
+or Bag, can all be considered to be generators. Instances of Array or String
+return the element stored in their first subscript position (if they have at
+least one subscript position) in response to the message first. On subsequent
+next messages they respond with the remaining elements in order. This
+functionality is provided by class ArrayedCollection, using an instance variable
+current (Figure 8.1.)
+
+\fig{language/fig_8_1.png}{height=.7\textheight}
+
+\fig{language/fig_8_2.png}{height=\textheight}
+
+Some data structures, such as instances ofthe class Bag, do not possess a
+"natural" ordering, and thus the order in which elements are produced in
+response to first and next messages is not defined, other than that all elements
+are eventually produced and no element is produced more than once.
+
+Notice that nothing is said about how a generator produces the object to be
+yielded in response to one of these messages. Some objects, such as instances of
+Bag or Array, maintain their collections in memory, and thus the response to
+first and next is merely to enumerate their elements. Instances of File are
+similar, only the values are retrieved from an external disk as required. Other
+generators, such as instances ofInterval, maintain only the information
+necessary for generating each new element as required, and that recompute each
+new element on demand (Figure 8.2). Indeed, the list of elements represented by
+instances of class Random can be considered to be infinite in length, and thus
+cannot be stored entirely in memory.
+
+From the point of view of the message passing interface, there is no distinction
+between classes that iterate over their elements in memory and classes that
+produce new elements on demand. Even in cases where the sequence to be produced
+in response to first and next is finite, there may be advantages to computing
+elements as needed rather than all at once when the object is defined.
+
+An example will illustrate how generators assist problem solving in Smalltalk.
+Consider the problem of producing prime numbers. By definition, a prime number
+is a value having only two divisors, itself and 1. A generator for prime numbers
+will produce the first prime value (namely 2) when offered the message first,
+and successive prime numbers in response to each next message.
+
+If a number n divides a number 111, then the prime factors of n must also divide
+nt. Thus, to tell if a number nl is a prime, we need not test all values less
+than 111, only those values that are prime. Therefore a simple generator for
+primes can be constructed by merely retaining the previously generated primes in
+a Set. As each new value is requested, an object representing the last prime
+produced is incremented and tested until a value having no factors is found. The
+new value is then inserted into the set and returned.
+
+\begin{lstlisting}
+    Class Primes
+    I prevPrimes lastPrime I
+    [
+    first
+    prevPrimes Set new.
+    prevPrimes add: (IastPrime 2).
+    l' lastPrime
+    next
+    [ lastPrime lastPrime + 1.
+    self testNumber: lastPrime ] whileFalse.
+    prevPrimes add: lastPrime.
+    l' lastPrime
+    testNumber: n
+    prevPrimes do: [:x I(n " "x = 0) ifTrue: [ l' false] ].
+    l' true    
+\end{lstlisting}
+
+A few simple observations will improve the efficiency ofthis algorithm and will
+also illustrate the proper choice of data structures. The loop in the method for
+testNumber: haIts and returns as soon as a previous prime is shown to be a
+factor of the number under consideration. Two is a factor of exactly one half of
+all numbers. Similarly three is a factor of one third of all numbers, and so on.
+If we could arrange to test previous primes in numeric order (that is, in the
+order in which they were generated) we would on average remove nonprimes much
+more quickly than the more or less random order given to us by a Set. The
+appropriate data structure for an ordered collection without keys is a List.
+Thus we rewrite the algorithm to use a List and the insertion method addLast:,
+which adds elements to the end of the list, rather than add:, which would add to
+the front of the list. In fact, keeping the previous primes in order allows yet
+another improvement in the algorithm since we can terminate the search of
+previous primes as soon as a value larger than vn is reached where n is the
+value being tested.
+
+\begin{lstlisting}
+    Class Primes
+I prevPrimes lastPrime I
+[
+first
+prevPrimes List new.
+prevPri mes add: (IastPri me 2).
+l' lastPrime
+next
+[ lastPrime lastPrime + 1.
+self testNumber: lastPrime l whileFalse.
+prevPrimes addLast: lastPrime.
+t lastPrime
+testNumber: n .
+prevPrimes do: [:x I
+(x squared> n) ifTrue: [ t true l.
+(n "" "" x = 0) ifTrue: [ t false l l
+\end{lstlisting}
+
+An obvious problem with both of these prime number generators is that they
+require an ever-increasing amount of storage to maintain the list of previous
+prime numbers. If you were constructing a long list of prime values, the size of
+this storage could easily become a problem. An alternative, which trades
+slightly longer computation time for reduced storage, is a recursive generator.
+This is analogous to a recursive procedure in programming languages such as
+Pascal. The following program does not maintain the list of previous primes but
+instead regenerates the list each time a new number is to be tested.
+
+\begin{lstlisting}
+    Class Primes
+IlastPrime I
+[
+first
+t lastPrime 2
+next
+[ lastPrime lastPrime + 1.
+self testNumber: lastPrime l whileFalse.
+t lastPrime
+testNumber: n
+(Primes new) do: [:x I
+(x squared> n) ifTrue: [ t true l.
+(n "" "" x = 0) ifTrue: [ i false l l
+\end{lstlisting}
+
+You may have noted that the message do: is being passed to an instance of class
+Primes, which does not contain a method for this message. The method for do: is
+inherited from class Object and is defined in terms of first and next.
+
+\begin{lstlisting}
+    do: aBlock Iitem I
+item self first.
+[ item notNii l whileTrue:
+[aBlock value: item. item self next l.
+i nil
+\end{lstlisting}
+
+The fact that do: is in class Object and therefore provides functionality for
+all objects illustrates the peIVasive nature of generators in Little Smalltalk.
+Any object can be manipulated as a generator merely by providing methods for the
+messages first and next.
+
+\input{language/filters}
+\input{language/goal}
+\input{language/genops}
+\input{language/getfurs}
+
+\secup

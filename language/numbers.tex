@@ -1,0 +1,72 @@
+\secrel{Numbers}
+
+The class hierarchy for numbers could be described as follows:
+
+\fig{language/numbers.png}{height=.5\textheight}
+
+\noindent
+Each of the classes Integer, Float, and Number implements methods for the
+arithmetic operations. The classes Integer and Float perform operations only for
+arguments of their own type. If an argument is not of the correct type, the
+message is then passed to the superclass, Number. For example.,the method for +
+in the class Integer looks something like the followin~:
+\begin{lstlisting}
++ aNumber
+    ^ <SameTypeOfObject self aNumber>
+        ifTrue: [ <lntegerAddition self aNumber> ]
+        ifFalse: t super + aNumber]
+\end{lstlisting}
+
+The primitive SameTyPeOfObject tests whetherthe two objects given as arguments
+are instances of the same class. Since the pseudo variable self is an instance
+of the class Integer, in this context the use of this primitive can be thought
+of as equivalent to:
+\begin{lstlisting}
+aNumber isKindOf: Integer
+\end{lstlisting}
+although the primitive expression, since it does not require any further message
+passing, is somewhat more efficient\note{The use of the primitive here is
+justified on the grounds that arithmetic operations are used much more
+frequently than other messages. Even so, some regard this as a weak argument and
+would advocate the more direct and obvious Smalltalk expression over the less
+clear primitive call.}. If the argument is of the correct class, primitive
+IntegerAddition produces the integer sum of the two arguments. If the argument
+is not an instance of class Integer, the message If+11 is passed to.the
+superclass, namely Number. In the class Number the following methods appear:
+\begin{lstlisting}
+    maxtype: aNurnber.
+        l' <GenerqlityTest self aNumber>
+            ifTrue: [self]
+            ifFalse: [aNumber coerce: self]
+    + ?Number
+        i (self maxtype: aNumber) + (aNumber maxtype: self)
+\end{lstlisting}
+
+To uiIderstand these methods, consider that a hierarchy of number classes can be
+defined, consisting of Integer at the lowest level, followed by Float, then
+followed by any others (including user-defined classes). When presented with two
+objects of different levels in the hierarchy, the class Number chooses the
+object with the more general class and passes to it the message coerce: with the
+other object as an argument. For example typing i + 3.5 results in the message
+coerce: 2 being passed to the object 3.5. The class Float, and any user-defined
+dasses, must implement a method for this message.
+
+To find the most general form for the operation you use the message maxtype:.
+The method for this message uses the primitive GeneralityTest, which returns
+true if the first argument is of a more general class than the second, and false
+otherwise\note{There is a problem here in determining the relative generality of
+two user-defined classes, or even the generality of user-defined classes and
+known classes, such as Float. One of the projects described at the end of the
+book invites the student to examine this problem and produce more general
+solutions.}. The method for maxtype: therefore either returns its first argument
+or coerces the argument into being of the class represented by the second
+argument:
+\begin{lstlisting}
+    coerce: aNumber
+        i aNumber asFloat
+\end{lstlisting}
+
+When Number has coerced both arguments into being the same type, the original
+message is then passed back to the modified objects. Assuming the response to
+coerce: was as expected, the objects should now be able to respond correctly to
+this message, and the expected result is finally produced.

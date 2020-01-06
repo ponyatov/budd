@@ -1,0 +1,46 @@
+\secrel{Cascades}
+
+Suppose you wanted to send a number of messages to the same object. For example,
+suppose you wanted to create a new instance of class Bag and to initialize it
+with the values 0 and 1. One way to do this would be to use a temporary variable
+as in:
+\begin{lstlisting}
+i~Bag new
+i add: 0
+i add: 1
+\end{lstlisting}
+
+Another way is to use a cascade. A cascade is a type of Smalltalk
+expression\note{Note that although similar concepts appear in both the Little
+Smalltalk system and the Xerox Smalltalk-80 programming environment, the syntax
+and meaning of cascades and primitives are different in the two systems.
+Appendix 5 describes how cascades and primitives are handled in the Xerox
+system.}. It is written as an expression followed by a semicolon followed by
+another expression without a receiver. When a cascade is evaluated, the first
+expression is computed, and then used as the receiver for the second expression.
+The result of a cascade is not the result ofthe second expression but the result
+ofthe first expression. In other words, the result ofthe second expression is
+ignored and discarded. Since a cascade is an expression, it can be used to form
+another cascade, and so on, to any desired level. The result of a cascade of any
+depth is always the result of the first expression. Thus, for example, you can
+create a new Bag and initialize it all with one expression, as in:
+\begin{lstlisting}
+Bag new; add: 0 ; add: 1
+\end{lstlisting}
+The receiver for both the messages add: a and add: 1 is the result of the
+expression Bag new, as is the result of the entire expression.
+
+There are several advantages to using cascaded expressions. Since
+there is no necessity to name the intermediate object, a cascade obviates
+the need for a great many temporary variables. Also, since the entire sequence is an expression, it can be used anywhere expressions are legal,
+for example, as an argument. Finally a cascade can often be used in place
+of parentheses to separate two keyword messages or to apply one message
+to another of lower precedence. For example, to print the result yielded
+by a keyword message you could write:
+\begin{lstlisting}
+Integer respondsTo: #+ ; print
+\end{lstlisting}
+in place of
+\begin{lstlisting}
+(Integer respondsTo: # +)print
+\end{lstlisting}

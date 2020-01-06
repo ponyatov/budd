@@ -1,0 +1,77 @@
+\secrel{Filters}
+
+An entirely different program can solve the same task as the prime number
+generators described in the last section. It uses another programing technique,
+filters, that is frequently useful in conjunction with generators.
+Extemally(that is, examining only the messages to which an object responds) a
+filter looks just like a generator. Unlike a "true" generator, however, a filter
+does not produce new· values in.response to first or next but takes values
+produced by a previously defined generator and modifies them or filters but
+values.
+
+The class FactorFilter exemplifies some of the essential features of a filter.
+Instances of FactorFilter are initialized by giving them a generator and a
+specific nonnegative value. In .response to next (the message first is in this
+case replaced by the initialization protocol), values from the underlying
+generator are requested andretumed, except values for which the given number is
+a factor are repressed. Thus the sequence returned by an instance of
+FactorFiiteris exactly the same as that given by the underlying generator, with
+the exception that values for which the given number is a factor are filtered
+out.
+
+\begin{lstlisting}
+    Class FactorFilter
+I myFactor generator I
+[
+remove: factorValue from: generatorValue
+myFactor factorValue.
+generator generatorValue
+next I possible I
+[ (possible generator next) notNil ]
+whileTrue:
+[ (possible" " myFactor -=0)
+ifTrue: [ t possible]].
+i nil
+\end{lstlisting}
+
+Using FactorFilter, you can construct a simple generator for prime numbers.
+First an instance of Interval that will generate all numbers from 2 to some
+fixed limit is constructed. As each value is removed, a filter is inserted in
+front of the generator to insure that all subsequent multiples of the value will
+be eliminated. A new value is then requested from the updated generator.
+
+\begin{lstlisting}
+    Class Primes
+    I primeGenerator lastFactor I
+    [
+    first
+    primeGenerator 2 to: 100.
+    lastFactor primeGenerator first.
+    i lastFactor
+    next
+    primeGenerator (FactorFilter new;
+    remove: lastFactor
+    from: primeGenerator).
+    i lastFactor primeGenerator next    
+\end{lstlisting}
+
+Pictorially, the underlying generator constructed by the first occurrence of the
+message next can be viewed as follows:
+
+\fig{language/filter_1.png}{height=.2\textheight}
+
+When asked for the next prime, the generator is modified by adding a filter,
+this time for the last prime value returned, the number 3.
+
+\fig{language/filter_2.png}{height=.2\textheight}
+
+The program continues. Each time a new prime is requested, a filter is
+constructed to remove all factors of the previous prime. in this fashion, all
+the primes are eventually generated.
+
+\fig{language/filter_3.png}{width=\textwidth}
+
+Of course, like the first two programs in the last section, the storage required
+for the chain of filters is proportional to the number of primes generated so
+far. Despite this, timings of actual programs show that the filter program is
+the fastest of the prime number generating programs described in this chapter.

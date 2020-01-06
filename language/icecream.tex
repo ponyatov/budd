@@ -1,0 +1,461 @@
+\secrel{The Ice Cream Store Simulation}
+
+In writing a simulation, such as our simulation of an ice cream store, the first
+question to ask is what the different objects in the simulation should represent
+and what functionality they should possess. At its simplest, our simulation must
+involve at least two classes of objects: a class representing the actions of the
+various customers that come to the store and a class representing the actions of
+the store itself in response to the requests of the customers.
+
+The application we will describe is known as a discrete, event-driven
+simulation. This means that the actions of the simulation will revolve around
+the recording and processing of a finite number of individual events. An event
+is simply the occurrence of some action that is important in the context of the
+simulation. Each event is marked with a time at which the event should take
+place. A "clock" records the current "time," which need not be related in any
+way to conventional time; a simple counter will suffice. As time progresses, the
+occurrence of each event controls the sequence of further actions in the
+simulation.
+
+Our first, and very simple, attempt at simulating an ice cream store will
+illustrate these concepts. A pending event is defined as any event that has. not
+yet taken place. Assume, first, that there is never more than one pending event.
+At the moment we need not concern ourselves with how each event is to be
+encoded, but only that it can be represented by an object. We can isolate the
+actions of the simulation that are independent of any particular application in
+an abstract superclass called Simulation. Particular simulations, such as in the
+ice cream store, will then be subclasses of Simulation.
+
+The first version of the class Simulation is shown in Figure 7.1. The class
+maintains the current "time" in the variable currentTime. The message proceed
+will indicate that the next action should take place. Since the actual
+interpretation of an event will differ from one simulation to the next, proceed
+leaves the task of interpreting the event to a subclass by passing the message
+processEvent: to the pseudo variable self. The message processEvent: must
+therefore be recognized in each subclass.
+
+\fig{language/fig_7_1.png}{height=\textheight}
+
+Having described the framework for keeping track of the simulation
+"bookkeeping," we can go on to describe the actions of our ice cream store. We
+start with a simple model in which customers arrive, order some number of scoops
+of ice cream, and leave. Each scoop of ice cream produces some amount of profit
+for the store. At the end of the simulation period we will want to know the
+profit.
+
+It is, however, not sufficient to merely describe what actions take place in the
+store; we must also describe how often those events should take place. For
+example, how often do customers arrive, how many scoops of ice cream will each
+customer order, and so on. We could make a simple assumption, such as a new
+customer will arrive every two minutes and order three scoops of ice cream. Such
+a deterministic assumption, however, defeats the necessity for the simulation at
+all since we can easily predict the outcome: in 15 minutes seven customers will
+arrive and order 21 scoops of ice cream. Instead, it is more interesting (to say
+nothing of being more realistic) to define the outcome of an event in terms of a
+random value chosen from a selected distribution.
+
+For example, let us suppose that at each instance the next customer will appear
+at a time uniformly chosen from the numbers 1 to 5. The phrase "uniformly
+chosen" means that each outcome (or each time) is equally likely, and thus we
+can use a random number generator to select a value in this range to represent
+the time for the next arrival. Letting IceCreamStore be the class representing
+our simulation of the store, this could be computed as shown in the method for
+the message scheduleArrival in Figure 7.2. Note that the instance variable rand
+is initialized to be an instance of the random number generator, and that during
+initialization the first customer is scheduled. The message randomize is used to
+insure that a new random sequence is generated each time we invoke the
+simulation.
+
+\fig{language/fig_7_2.png}{height=\textheight}
+
+Notice we have chosen to represent events by an instance of class Customer. In
+our first simulation very little functionality is required of the customer. Each
+customer must arrive and upon arrival decide the number of scoops of ice cream
+he or she will order. Thus the class shown in Figure 7.3 suffices for customers.
+
+The only remaining part of our simulation is deciding how the class
+IceCreamStore should respond to the message processEvent:. Since the event is an
+instance of class Customer, all that is required is determining the amount of
+ice cream to be dispensed (and thus the profit to be made) and scheduling the
+next customer. The latter requirement may not be obvious, but is important. For
+our simulation to work, each event must generate some number of other events.
+The decision about where and when each event should schedule the next is not
+always obvious, but must be made someplace.
+
+\begin{lstlisting}
+    Class Customer
+    Irand I
+    [
+    new
+    rand Random new.
+    rand randomize
+    numberOfScoops I number I
+    number rand randlnteger: 3.
+    ('customer has " number I I scoops I) print.
+    l' number    
+\end{lstlisting}
+
+Let us assume that each scoop of ice cream generates seventeen cents profit for
+the store. The response to the message processEvent: can then be represented as
+follows:
+\begin{lstlisting}
+    processEvent: event
+    ('customer received at I, self time) print.
+    profit profit + (event numberOfScoops * 0.17 ).
+    self scheduleArrival    
+\end{lstlisting}
+To determine how much profit might be produced in 15 minutes, we could then run
+our simulation as follows:
+\begin{lstlisting}
+    store IceCreamStore new
+    [store time < 15] whileTrue: [store proceed]
+    customer received at 1
+    customer has 1 scoops
+    customer received at 2
+    customer has 3 scoops
+    customer received at 5
+    customer has 1 scoops
+    customer received at 8
+    customer has 1 scoops
+    customer received at 11
+    customer has 1 scoops
+    customer received at 16
+    customer has 2 scoops
+    store reportProfits
+    profits are 1.53    
+\end{lstlisting}
+
+Now, having produced our first simulation, let us go back and examine some of
+the assumptions we made to decide if they are really accurate. Do customers
+really arrive with a uniform distribution? Do they always arrive individually?
+Do they really order some number of scoops with a uniform probability?
+
+Let us tackle the last question first. Suppose we observe a real ice cream store
+for some period of time and note that 65\% of the time customers will order one
+scoop, 25\% of the time they order two scoops, and only 10\% of the time do they
+order three scoops. This is certainly a far different distribution from the one
+given by our assumption that all three outcomes are equally likely. In order to
+simulate this behavior, we must generate a random integer that returns one 65%
+of the time, two 25\% of the time, and three 10\% of the time. A distribution of
+values such as we have described is known as a weighted discrete probability.
+One way to generate a random value satisfying our requirements is to generate a
+uniform random number between 1 and 100. Ifthis uniform value is less than or
+equal to 65, we return 1; if less than or equal to 90, we return 2; otherwise,
+we return 3. We can generalize this to work for any weighted distribution we
+like, producing the class DiscreteProbability shown in Figure 7.4. In response
+to the message next, an instance of this class will return a value between 1 and
+the size of the weights array, distributed according to the weights given.
+
+\fig{language/fig_7_3.png}{height=\textheight}
+
+The distribution of ice cream orders was obtained by obsenring a large body of
+customers. So we can argue whether the number of scoops an individual will order
+should be part of the protocolfor the Customer class (since the customer is
+issuing the order) or for the IceCreamStore class (since the distribution is
+taken from observations of ice cream store customers as a group). The last
+simulation illustrated the first Variation. The following simulation will
+illustrate the second variation
+
+Let us alter the assumption that customers arrive one by one; since it is a
+social process, people tend to eat ice cream in groups. Each instance of class
+Customer will be changed, therefore, to represent a group of individuals. Upon
+creation, each instance will determine its group size, which will thereafter be
+returned in response to a request via the message groupSize. Given these
+changes, our second simulation can be given as shown in Figure 7.5
+
+Suppose we complicate things now by adding an inside dining area to our ice
+cream store. There are several more factors to consider. Whereas formerly we
+assumed we could accommodate as many customers as would arrive in any particular
+time period, now we can only accommodate those customers who can find chairs. In
+this new situation, the sequence of events affecting a single customer or a
+group of customers is now more complicated than the previous case, where the
+only event of importance from the customer's point ofview was the receipt ofthe
+ice cream. Now the following sequence will take place:
+\begin{enumerate}
+    \item Some group of customers will arrive. If there are not enough chairs,
+    they will immediately leave. Otherwise, they will take seats and start to
+    look at the menu.
+    \item Later the group of customers will place an order and receive their ice
+    cream.
+    \item Still later, the group will have finished their ice cream and will
+    leave.
+\end{enumerate}
+
+Furthermore. we can now have several events happening simultaneously. One group
+of customers can be eating their ice cream, while another is ordering, and a
+third is just arriving. Thus, the basic assumption that there is always just one
+pending event is no longer valid. Now the class Simulation must be altered to
+keep a queue of pending events. In response to the message proceed, the event
+with the next smallest time marker is removed from the queue and initiated. One
+convenient data structure to maintain both the pending events and their time for
+initiation is a dictionary using the time as a key and the event as the value.
+However, two events can happen at the same time (for instance, one group can
+order while another arrives). Therefore the value of the dictionary cannot be
+simply a single event, but must be a set of events. Our revised class Simulation
+is shown in Figure 7.6.
+
+Events are now more complicated. We must .remember not only a group of customers
+but also what state they are in: whether they have just arrived, are about to
+order, or are about to leave. One way to do this is to store as an event a block
+which when evaluated will move the customer to the next state. Recall that a
+block evaluates in the context in which it IS defined and not until passed the
+message value. Thus, for example, the protocol for scheduleArrival might be
+given as follows:
+\begin{lstlisting}
+    scheduleArrival I newCustomer I
+newCustomer Customer new.
+self addEvent: [self customerArrival: newCustomer]
+at: (self time + (rand randlnteger: 5
+\end{lstlisting}
+
+\begin{lstlisting}
+    Class IceCreamStore :Simulation
+    I profit rand scoopDistribution I
+    [
+    new
+    profit O.
+    rand Random new.
+    scoopDistribution DiscreteProbability new
+    scoopDistribution defineWeights: #(65 25 10).
+    self scheduleArrival
+    scheduleArrivaI
+    self addEvent: Customer new
+    at: (self time + (rand randlnteger: 5
+    processEvent: event
+    Ccustomer received at I, self time) print.
+    profit profit + selfscoopsFor: event groupSize) * 0.17).
+    self scheduleArrival
+    scoopsFor: group I number I
+    number O.
+    group timesRepeat:
+    [number number + scoopDistribution next].
+    ('group of I, group, I have I I number I I scoops I) print.
+    t number
+    
+    reportProfits
+('profits are I, profit) print
+Class Customer
+1 groupSize I
+[
+new
+groupSize <E- (Random new randomize) randlnteger: 8
+groupSize
+t groupSize
+\end{lstlisting}
+
+A new customer is created and placed in the temporary variable new Customer. A
+block is then installed in the event queue. Since this block references the
+temporary variable newCustomer, the temporary will be retained (i.e., the
+storage it uses ·will not be reclaimed) as long as the block exists. However,
+each time the message scheduleArrival is received, a new instance of Customer
+will be created. The processing indicated by the block will not take place until
+the block is evaluated using the message value. This takes place when the event
+is processed:
+\begin{lstlisting}
+    processEvent: event
+event value.
+self scheduleArrival
+\end{lstlisting}
+
+\begin{lstlisting}
+    Class Simulation
+I currentTime eventQueue I
+[
+new
+eventQueue Dictionary new.
+currentTime 0
+time
+t currentTime
+addEvent: event at: eventTime
+
+(eventQueue inciudesKey: eventTime)
+ifTrue: [(eventQueue at: eventTime) add: event]
+ifFalse: [eventQueue at: eventTime
+put: (Set new; add: event)]
+addEvent: event next: timelncrement
+self addEvent: event at: currentTime + timelncrement
+proceed I minTime eventset event I
+minTime ~99999.
+eventQueue keysDo:
+[:x I(x < minTime) ifTrue: [minTime xl].
+currentTime minTime.
+eventset eventQueue at: minTime ifAbsent: [t nil].
+event eventset first.
+eventset remove: event.
+(eventset isEmpty) ifTrue: [eventQueue removeKey: minTime].
+self processEvent: event
+\end{lstlisting}
+
+When the block created in scheduleArrival is evaluated, it will send the message
+customerArrival: to the pseudo variable self, that is, to the simulation object.
+Upon arrival, if there are a sufficient number of chairs, the customers sit down
+and order, otherwise they leave. Let us use an instance variable remainingChairs
+to represent the number of free chairs at any point. The time between arriving
+and ordering will be a random value from one to three. The protocol for
+customerArrival: can then be given as follows:
+
+\begin{lstlisting}
+    customerArrival: customer I size I
+size customer groupSize.
+('group of size 1, size, I arrives') print.
+(size < remainingChairs)
+ifTrue: [remainingChairs remainingChairs - size.
+'take chairs, schedules order' print.
+self addEvent: [self customerOrder: customer]
+next: (rand rand Integer: 3).
+]
+ifFalse: ['finds no chairs, leaves' print]
+\end{lstlisting}
+
+Notice that again a block has been used to represent the next event. When
+evaluated, this block will pass the message custonlerOrder:. The protocol for
+this message is as follows:
+
+\begin{lstlisting}
+    customerOrder: customer I size numScoops I
+size customer groupSize.
+numScoops O.
+size timesRepeat:
+[numScoops numScoops + scoopDistribution next].
+('group of size I, size, I orders I , numScoops , I SCOOpSl) print.
+profit profit + (numScoops * 0.17).
+self addEvent:
+[self customerLeave: customer]
+next: (rand rand Integer: 5)
+\end{lstlisting}
+
+Once more the time between a group of customers ordering and leaving
+is determined by a random value chosen between 1 and 5. When the
+customers finally do leave, they relinquish their chairs.
+
+\begin{lstlisting}
+    customerLeave: customer I size I
+size customer groupSize.
+('group of size I, size, I leavesl
+) print.
+remainingChairs remainingChairs + customer groupSize
+\end{lstlisting}
+
+We will make one final change to illustrate how our simulation can be made even
+more realistic. In practice, few random events ever occur with uniform
+probability. More often, other distributions, such as a Bernoulli distribution
+or a Poisson distribution, are observed to model a process. One very common form
+is the Normal distribution, which is characterized by values clustering around a
+mean, with the chances of a value decreasing exponentially the farther they move
+from the mean. Figure 7.7 shows one class that can be used for generating random
+values with a normal distribution. No attempt is made to motivate the algorithm
+used in the method for the message next; an interested reader can refer to the
+end of this chapter fDr additional literature.
+
+Given the ability to produce random values from a normal distribution, we can
+change our assumption about customers arrivals to be more realistic. For
+example, we could assume customers arrive in a normal distribution with a mean
+of 3 minutes and a standard deviation of 1 minute. Figure 7.8 shows the class
+header and the protocol for the initialization message new and the message
+scheduleArrival incorporating these changes. In the method for scheduleAnival we
+have also incorporated a "closing time" by adding events corresponding only to
+customers who arrive before some fixed limit. After closing time, no new
+customers will arrive, but the customers waiting to order and waiting to leave
+will still be processed. This is so that the event queue can be flushed out and
+the simulation terminate in a clean fashion.
+
+Other random values used in the simulation could be modified to use a different
+distribution by making changes such as the ones we have illustrated for the
+arrival time distribution.
+
+We end with an example session of our final simulation:
+\begin{lstlisting}
+    Class Normal :Random
+I mean deviation I
+[
+new
+self setMean: 1.0 deviation: 0.5
+setmean: m deviation: s
+mean m.
+deviation s
+next I v1 v2 sui
+s~l
+[s > = I] whileTrue:
+[v1 (2 * super next) - 1
+v2 (2 * super next) - 1.
+s v1 squared + v2 squared ].
+u (- 2.0 * s In / s) sqrt.
+t mean + (deviation * v1 * u)
+\end{lstlisting}
+
+\begin{lstlisting}
+    Class IceCreamStore :Simulation
+I profit arrivalDistribution rand scoopDistribution remainingChairs I
+[
+new
+profit O.
+remainingChairs 15.
+rand Random new.
+~arrivalDistribution Normal new:
+setMean: 3.0 deviation: 10.
+scoopDistribution DiscreteProbability new:
+defineWeights: #(65 26 10).
+self scheduleArrival
+scheduleArrival I newCustomer time I
+newCustomer Customer new.
+time self time + (arrivalDistribution next).
+(time < 15) ifTrue: [ self addEvent: [ self customerArrival: newCustomer]
+c:lt: time]
+\end{lstlisting}
+
+\begin{lstlisting}
+    store lceCreamStore new
+[stQre time < 60] whileTrue: [store proceed]
+event received at 3.46877
+group of size 8 arrives
+takes chairs, schedules order
+event re<;eived at 5.81336
+group of size 8 arrives
+finds no chairs, leaves
+event received at 6.46877
+group of size 8 orders 11 scoops
+event received at 146877
+group of size 8 leaves
+event received at 8.91228
+group of size 1 arrives
+takes chairs, schedules order
+event received at 10.9123
+group of size 1 orders 1 scoops
+event received at 10.9499
+group of size 7 arrives
+takes chairs, schedules order
+event received at 11.8463
+group of size 5 arrives
+takes chairs, schedules order
+event received at 12.0194
+group of size 2 arrives
+finds no chairs, leaves
+event received at 12.8463
+group of size 5 orgers 6 scoops
+event received at 12.9123
+group of size 1 leaves
+event received at 12.9499
+group of size 7 orders 13 scoops
+event received at 13.8077
+group of size 7 arrives
+finds no chairs, leaves
+event received at 14.6301
+group of size 5 arrives
+finds no chairs, leaves
+event received at 16.9499
+group of size 7 leaves
+event received at 17.8463
+group of size 5 leaves
+store reportProfits
+profits are 5.27
+\end{lstlisting}
+
+Since Smalltalk objects can be created, removed, and in general placed in a
+one-to-one correspondence with objects in the abstract model being simulated
+(the objects representing the customer groups, for example). It is relatively
+easy to take any model expressed in the discrete event-driven form and enunciate
+it in Smalltalk. Similarly the development of new simulations is simplified by
+the inheritance ofcommon behavior from class Simulation. Finally, once a
+simulation has been developed, it is easy to modify, for example, replacing a
+value generated with a normal distribution with one generated according to a
+Bernoulli distribution.

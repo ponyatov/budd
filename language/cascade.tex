@@ -1,0 +1,104 @@
+\secrel{Primitives, Cascades, and Coercions}\secdown
+
+This chapter introduces the syntax for cascaded expressions and describes the
+notion of primitive expressions. It illustrates the use of primitives by showing
+how primitives are used to produce the correct results for mixed mode arithmetic
+operations.
+
+\input{language/cascades}
+\input{language/prims}
+\input{language/numbers}
+
+\secly{Exercises}
+
+\begin{enumerate}
+
+    \item One advantage cited for cascaded expressions was that several
+Smalltalk statements could be combined together into one expression. For example
+the initialized Bag discussed in the text could be used as an argument to
+another object as follows:
+\begin{lstlisting}
+anObject foo: (Bag new; add: 0; add 1)
+\end{lstlisting}
+How else might this be done in a single expression without using cascading? You
+can use temporary variables, if you wish.
+
+\item What will the result of typing the following expression be? Explain why.
+\begin{lstlisting}
+2 + (3 print) ; + 4
+\end{lstlisting}
+
+\item Examine the class descriptions for the classes Object, Magnitude, Number,
+Integer, and Float. Explain in detail how radians respond to the messages < =
+and > = .
+
+\item Rewrite the methods for = and < in class Radian so that radians can be
+compared only to other radians.
+
+\item Does the class Integer need to provide a method for coerce:? Why or why
+not? How about the class Number?
+
+\item An alternative to having instances of class Radian maintain their value in
+an instance variable would be to make the class a subclass of class Float.
+Discuss the advantages and disadvantages of this approach.
+
+\item Recall that in the hierarchy of number classes all other classes have a
+higher ranking then any of Integer or Float. Assume that the class Number
+contains the following method
+\begin{lstlisting}
+    i 
+        Complex new; imagpart: self
+\end{lstlisting}
+That is, in response to the message i, a number will create a new instance of
+the type Complex and initialize it with the current object.
+
+Using this method, define the class Complex used to manipulate complex numbers.
+Your class should implement methods for the following messages:
+
+\noindent
+\begin{tabular}{l p{8cm}}
+    new & Set both the imaginary and real portions of the complex number to
+    zero. \\
+    realpart: & Define the real part of the current number to be the argument.
+    \\
+    imagpart: & Define the imaginary part of the current number to be the
+    argument. \\
+    coerce: & Coerce a non-complex, returning an equivalent complex number with
+    zero imaginary part. \\
+    + & Complex addition. \\
+    * & Complex multiplication. \\
+    printString & produce a printable representation of the number. \\
+\end{tabular}
+
+\noindent
+Test your class description by typing several example expressions involving
+complex numbers.
+
+\item A useful control structure in many programming languages is a multiway
+switch statement, which permits the selection of one out ofseveral possibilities
+based on the value of some selection key. Using cascades and blocks we can
+implement a multiway switch in Smalltalk. The class Switch will use the message
+new: both as a creation message and to assign the switch selection key. The
+message case:do: will compare the first argument to the selection key, and, if
+equal, the second argument (a block) will be evaluated. The message test:do:
+uses blocks for both arguments. The first argument, a one parameter block, is
+evaluated using the selection key; if it returns true, the second argument is
+evaluated. A flag is maintained by each instance of Switch indicating whether
+any condition has been satisfied. The message default: executes the argument, a
+block, if no previous condition has been met.
+
+For example, the following statement uses a variable suit representing the suit
+of a card from a deck of cards. It places into color a string representing the
+color ofthe card.
+\begin{lstlisting}
+    Switch new: suit;
+    case: #spade do: [ color~lblack'] ;
+    case: #c1ub do: [ color~lblack' ] ;
+    test: [:x I(x = #diamond) or: [x = #heart] ] do: [ color~'red'] ;
+    default: [ self error: 'unknown suit I , suit]
+\end{lstlisting}
+Provide a class description for Switch.
+
+\end{enumerate}
+
+\secup

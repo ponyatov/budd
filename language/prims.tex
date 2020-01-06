@@ -1,0 +1,58 @@
+\secrel{Primitives}
+
+At this point you may be wondering how anything ever gets accomplished in
+Smalltalk. As described so far, actions are produced by one object sending a
+message to another object. In response to this message, the second object may in
+turn send still other messages to more objects. If this were all there were to
+the language, there would seem to be a sort of infinite regress preventing any
+substantial action from taking place.
+
+The solution to this problem is yet another form of expression, called a
+primitive. A primitive can be thought of as a system call, permitting access to
+the underlying virtual machine. Syntactically, a primitive is denoted by an
+angle bracket followed by a name followed by a list of objects followed by a
+closing angle bracket, for example:
+\begin{lstlisting}
+<lntegerAddition i j>
+\end{lstlisting}
+Alternatively, every primitive is also assigned a number. The primitive name can
+be replaced by the keyword "primitive" and this number. Thus, since the integer
+addition primitive is number 10, the above expression could also be written as:
+\begin{lstlisting}
+<primitive 10 i j >
+\end{lstlisting}
+However, the second form is less representative of the operation being
+performed. Primitives are chiefly used in class descriptions and should almost
+never by typed directly at the command level. In any case, only the second form
+(expressing the desired primitive by number) is recognized at the command level.
+
+Note that a primitive call is not the same as a message passing, although the
+differences are largely hidden from the user. There is no notion of a "receiver"
+in a primitive expression, and a primitive cannot send further messages in
+producing its response. For this reason most primitive operations, as the name
+suggests, are very simple. A table of primitives is given in Appendix 4. In
+general the value nil is returned, and an error message produced, if arguments
+to a primitive are not correct or the primitive cannot produce the desired
+result.
+
+A portion ofthe class description for the class Radian is given in Figure 6.1.
+This class uses the primitives Sin and Cos to compute the value of the
+trigonometric functions on radian inputs. Notice how the class Radian responds
+to the message printString by concatenating the string representation of its
+value with the literal string "radians." Thus the message IfX print," if x is a
+radian with value 0.85, will produce the message "0.85 radians." This technique
+is used in many classes to provide more informative printed representations of
+objects.
+
+There is a temptation on the part of many novice Little Smalltalk users to use
+primitives in place of Smalltalk expressions in the name of llefficiency." This
+should be avoided. Such gains in efficiency are usually negligible, if they
+exist at all. More importantly, the notion of primitive is really just a
+pragmatic device permitting some operations to be specified that could not
+otherwise be given in Smalltalk. The syntax is a bit obscure, and the notion
+does not fit quite smoothly into the object-oriented framework of the rest of
+Smalltalk. Thus primitives should be used only as a last resort, only after a
+great deal of thought as to the alternatives, and only in extremely simple
+methods that put a more lfSmalltalk-like" cloak over the primitive call.
+
+\fig{language/fig_6_1.png}{height=.9\textheight}
